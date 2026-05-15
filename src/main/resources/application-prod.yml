@@ -1,0 +1,15 @@
+spring:
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+
+  sql:
+    init:
+      mode: never
+
+logging:
+  level:
+    root: INFO
+    # 자바 프로젝트 기본 패키지(Base Package) 경로 / src/main/java/com/codesquad_team01/issue_tracker
+    com.codesquad_team01.issue_tracker: INFO

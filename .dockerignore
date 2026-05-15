@@ -1,0 +1,31 @@
+# 1. 프론트엔드 및 문서 (백엔드 컨테이너와 무관한 대용량 데이터 격리)
+frontend/
+images/
+README.md
+
+# 2. 로컬 인프라 및 민감 정보 (보안 및 운영 격리)
+docker/
+docker-compose.yml
+.env
+*.sample.*
+application-local.yml
+
+# 3. 빌드 결과물 및 캐시 (도커 내부에서 자체 빌드하므로 외부 결과물 유입 차단)
+build/
+out/
+.gradle/
+
+# 4. 버전 관리 및 CI/CD (이미지 경량화를 위해 히스토리 제거)
+.git/
+.gitattributes
+.github/
+
+# 5. IDE 및 OS 임시 파일
+.idea/
+.vscode/
+.DS_Store
+*.swp
+
+# 6. 도커 설정 파일 자신 (이미지 내부에는 필요 없음)
+Dockerfile
+.dockerignore
