@@ -3,6 +3,7 @@ package com.codesquad_team01.issue_tracker.milestone.repository;
 import com.codesquad_team01.issue_tracker.milestone.domain.Milestone;
 import com.codesquad_team01.issue_tracker.milestone.domain.MilestoneState;
 import com.codesquad_team01.issue_tracker.milestone.dto.response.MilestoneListItemResponse;
+import org.springframework.data.jdbc.repository.query.Modifying;
 import org.springframework.data.jdbc.repository.query.Query;
 import org.springframework.data.repository.ListCrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -29,4 +30,8 @@ public interface MilestoneRepository extends ListCrudRepository<Milestone, Long>
             "WHERE m.is_opened = :#{#state.name() == 'OPEN' ? 1 : 0} AND m.deleted_at IS NULL " +
             "ORDER BY m.id DESC")
     List<MilestoneListItemResponse> findAllByState(@Param("state") MilestoneState state);
+
+    @Modifying
+    @Query("UPDATE milestone SET deleted_at = NOW() WHERE id = :id AND deleted_at IS NULL")
+    boolean deleteMilestoneById(@Param("id") Long id);
 }
