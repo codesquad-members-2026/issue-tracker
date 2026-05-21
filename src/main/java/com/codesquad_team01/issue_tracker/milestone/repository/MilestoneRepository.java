@@ -9,6 +9,7 @@ import org.springframework.data.repository.ListCrudRepository;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface MilestoneRepository extends ListCrudRepository<Milestone, Long> {
 
@@ -22,6 +23,7 @@ public interface MilestoneRepository extends ListCrudRepository<Milestone, Long>
             "m.name,  " +
             "m.completion_date,  " +
             "m.description, " +
+            "m.is_opened, " +
             "(SELECT COUNT(*) FROM issue i WHERE m.id = i.milestone_id AND i.is_opened = 1 AND i.deleted_at IS NULL) " +
             "AS open_issue_num, " +
             "(SELECT COUNT(*) FROM issue i WHERE i.milestone_id = m.id AND i.is_opened = 0 AND i.deleted_at IS NULL) " +
@@ -30,6 +32,23 @@ public interface MilestoneRepository extends ListCrudRepository<Milestone, Long>
             "WHERE m.is_opened = :#{#state.name() == 'OPEN' ? 1 : 0} AND m.deleted_at IS NULL " +
             "ORDER BY m.id DESC")
     List<MilestoneListItemResponse> findAllByState(@Param("state") MilestoneState state);
+
+    @Query("SELECT " +
+            "m.id, " +
+            "m.name, " +
+            "m.completion_date, " +
+            "m.description, " +
+            "m.is_opened, " +
+            "(SELECT COUNT(*) FROM issue i WHERE i.milestone_id = m.id AND i.deleted_at IS NULL AND i.is_opened = 1) AS open_issue_num, " +
+            "(SELECT COUNT(*) FROM issue i WHERE i.milestone_id = m.id AND i.deleted_at IS NULL AND i.is_opened = 0) AS closed_issue_num " +
+            "FROM milestone m " +
+            "WHERE m.deleted_at IS NULL " +
+            "AND m.id = :id ")
+    Optional<MilestoneListItemResponse> findByIdWithCounts(@Param("id") Long id);
+
+    @Modifying
+    @Query("UPDATE milestone SET is_opened = :#{#state.name() == 'OPEN' ? 1 : 0} WHERE id = :id AND deleted_at IS NULL")
+    Boolean updateMilestoneState(@Param("state") MilestoneState state, @Param("id") Long id);
 
     @Modifying
     @Query("UPDATE milestone SET deleted_at = NOW() WHERE id = :id AND deleted_at IS NULL")
