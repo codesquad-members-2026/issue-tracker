@@ -11,6 +11,6 @@ public enum MilestoneState {
         if(value == null)
             return null;
 
-        return MilestoneState.valueOf(value.toUpperCase());
+        return MilestoneState.valueOf(value);
     }
 }

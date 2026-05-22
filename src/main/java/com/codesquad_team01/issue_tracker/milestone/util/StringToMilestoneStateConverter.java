@@ -11,8 +11,8 @@ public class StringToMilestoneStateConverter implements Converter<String, Milest
     @Override
     public MilestoneState convert(String source) {
         return switch (source){
-            case "open" -> MilestoneState.OPEN;
-            case "closed" -> MilestoneState.CLOSED;
+            case "OPEN" -> MilestoneState.OPEN;
+            case "CLOSED" -> MilestoneState.CLOSED;
             default -> MilestoneState.OPEN;
         };
     }
