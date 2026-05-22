@@ -55,6 +55,16 @@ public class MilestoneController {
         return ApiResponse.success(message, milestoneService.updateMilestoneState(state, milestoneId));
     }
 
+    @PatchMapping("/{milestoneId}")
+    public ApiResponse<MilestoneListItemResponse> updateMilestone(
+            @Valid @RequestBody MilestoneSingleRequest milestoneSingleRequest,
+            @PathVariable @Min(value = 1, message = "ID는 1 이상의 양수여야 합니다.") Long milestoneId
+    ){
+
+        return ApiResponse.success("마일스톤 편집 성공",
+                milestoneService.updateMilestone(milestoneId, milestoneSingleRequest));
+    }
+
     @DeleteMapping("/{milestoneId}")
     public ApiResponse<MilestoneDeleteResponse> deleteMilestone (
             @PathVariable @Min(value = 1, message = "ID는 1 이상의 양수여야 합니다.") Long milestoneId

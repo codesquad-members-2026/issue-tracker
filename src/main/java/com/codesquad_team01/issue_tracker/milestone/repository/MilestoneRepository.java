@@ -2,6 +2,7 @@ package com.codesquad_team01.issue_tracker.milestone.repository;
 
 import com.codesquad_team01.issue_tracker.milestone.domain.Milestone;
 import com.codesquad_team01.issue_tracker.milestone.domain.MilestoneState;
+import com.codesquad_team01.issue_tracker.milestone.dto.request.MilestoneSingleRequest;
 import com.codesquad_team01.issue_tracker.milestone.dto.response.MilestoneListItemResponse;
 import org.springframework.data.jdbc.repository.query.Modifying;
 import org.springframework.data.jdbc.repository.query.Query;
@@ -53,4 +54,13 @@ public interface MilestoneRepository extends ListCrudRepository<Milestone, Long>
     @Modifying
     @Query("UPDATE milestone SET deleted_at = NOW() WHERE id = :id AND deleted_at IS NULL")
     boolean deleteMilestoneById(@Param("id") Long id);
+
+    @Modifying
+    @Query("UPDATE milestone " +
+            "SET " +
+            "name=:#{#milestone.name}, " +
+            "completion_date=:#{#milestone.completionDate}, " +
+            "description=:#{#milestone.description} " +
+            "WHERE id=:id AND deleted_at IS NULL")
+    boolean updateMilestone(@Param("id") Long id, @Param("milestone") Milestone milestone);
 }

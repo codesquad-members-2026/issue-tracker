@@ -45,6 +45,18 @@ public class MilestoneService {
     }
 
     @Transactional
+    public MilestoneListItemResponse updateMilestone(Long milestoneId, MilestoneSingleRequest milestoneSingleRequest){
+        Milestone milestone = milestoneSingleRequest.toMilestone();
+        boolean isUpdated = milestoneRepository.updateMilestone(milestoneId, milestone);
+
+        if(!isUpdated){
+            throw new IllegalStateException("마일스톤이 존재하지 않거나 이미 삭제되었습니다.");
+        }
+
+        return milestoneRepository.findByIdWithCounts(milestoneId).orElseThrow(IllegalStateException::new);
+    }
+
+    @Transactional
     public MilestoneDeleteResponse deleteMilestone(Long milestoneId){
         boolean idDeleted = milestoneRepository.deleteMilestoneById(milestoneId);
 

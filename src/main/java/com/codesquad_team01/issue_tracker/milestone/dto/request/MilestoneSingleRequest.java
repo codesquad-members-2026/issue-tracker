@@ -9,7 +9,6 @@ import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
 
 public record MilestoneSingleRequest (
-
         @NotBlank(message = "마일스톤 이름은 필수 입력값입니다.")
         @Size(max = 50, message = "마일스톤 이름은 50자를 넘어갈 수 없습니다.")
         String name,
