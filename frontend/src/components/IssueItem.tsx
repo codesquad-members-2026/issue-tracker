@@ -1,4 +1,5 @@
 // src/IssueItem.tsx
+import { Link } from "react-router-dom";
 
 // 나중에 App.tsx에서 쓸 데이터 타입(구조)도 여기서 한 번에 정의해 주면 좋습니다.
 export interface IssueType {
@@ -74,7 +75,9 @@ export default function IssueItem({ issue, isSelected, onToggle }: IssueItemProp
                     )}
 
                     {/* [이슈 제목] */}
-                    <h2 className="font-['Pretendard'] text-[20px] font-medium text-[#14142B] leading-[32px]">{title}</h2>
+                    <Link to={`/issues/${id}`}>
+                        <h2 className="font-['Pretendard'] text-[20px] font-medium text-[#14142B] leading-[32px] hover:text-[#007AFF] transition-colors">{title}</h2>
+                    </Link>
 
                     {/* [InformationTag] 렌더링 */}
                     {labels.map((label) => (

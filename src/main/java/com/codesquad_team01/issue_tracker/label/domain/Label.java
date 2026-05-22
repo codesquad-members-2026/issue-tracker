@@ -25,4 +25,8 @@ public class Label {
         this.backgroundColor = backgroundColor;
         this.deletedAt = deletedAt;
     }
+
+    public void deleteLabel(){
+        this.deletedAt = LocalDateTime.now();
+    }
 }

@@ -1,6 +1,6 @@
 package com.codesquad_team01.issue_tracker.issue.dto.response;
 
-import com.codesquad_team01.issue_tracker.comment.dto.CommentResponse;
+import com.codesquad_team01.issue_tracker.comment.dto.response.CommentResponse;
 import com.codesquad_team01.issue_tracker.label.dto.response.LabelResponse;
 import com.codesquad_team01.issue_tracker.member.dto.response.AuthorResponse;
 import com.codesquad_team01.issue_tracker.milestone.dto.response.MilestoneResponse;

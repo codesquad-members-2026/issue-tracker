@@ -5,10 +5,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.MappedCollection;
-
 import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -60,5 +61,33 @@ public class Issue {
 
     public void changeTitle(String title) {
         this.title = title;
+    }
+
+    public void changeContents(String contents) {
+        this.contents = contents;
+    }
+
+    public void updateMilestoneId(Long milestoneId) {
+        this.milestoneId = milestoneId;
+    }
+
+    public void updateLabelIds(List<Long> newLabelIds) {
+        this.issueLabels.clear();
+        if (newLabelIds != null) {
+            Set<IssueLabel> updatedLabels = newLabelIds.stream()
+                    .map(labelId -> new IssueLabel(null, labelId))
+                    .collect(Collectors.toSet());
+            this.issueLabels.addAll(updatedLabels);
+        }
+    }
+
+    public void updateAssignees(List<Long> newAssigneeIds) {
+        this.assignees.clear();
+        if (newAssigneeIds != null) {
+            Set<Assignee> updatedAssignees = newAssigneeIds.stream()
+                    .map(memberId -> new Assignee(null, memberId))
+                    .collect(Collectors.toSet());
+            this.assignees.addAll(updatedAssignees);
+        }
     }
 }

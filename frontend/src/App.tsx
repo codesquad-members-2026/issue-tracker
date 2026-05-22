@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'; // 라우터 �
 import Header from './components/Header.tsx';
 import IssueListPage from './pages/IssueListPage.tsx';
 import IssueWritePage from './pages/IssueWritePage.tsx'; // 작성 페이지 임포트
+import IssueDetailPage from './pages/IssueDetailPage.tsx';
 
 function App() {
     return (
@@ -18,6 +19,9 @@ function App() {
 
                     {/* 이슈 작성 페이지 */}
                     <Route path="/issues/new" element={<IssueWritePage />} />
+
+                    {/* 이슈 상세 페이지 */}
+                    <Route path="/issues/:id" element={<IssueDetailPage />} />
                 </Routes>
             </div>
         </BrowserRouter>

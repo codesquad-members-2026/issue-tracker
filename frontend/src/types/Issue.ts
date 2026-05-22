@@ -13,16 +13,45 @@ export interface Label {
 export interface Milestone {
     id: number;
     name: string;
+    progress?: number;
+}
+
+export interface Comment {
+    id: number;
+    author: User;
+    contents: string;
+    createdAt: string;
+    isIssueAuthor: boolean;
+}
+
+export interface IssueDetail {
+    id: number;
+    title: string;
+    contents: string;
+    isOpened: boolean;
+    createdAt: string;
+    author: User;
+    commentCount: number;
+    comments: Comment[];
+    assignees: User[];
+    labels: Label[];
+    milestone: Milestone | null;
+}
+
+export interface IssueDetailResponse {
+    success: boolean;
+    message: string;
+    data: IssueDetail;
 }
 
 export interface Issue {
     id: number;
     title: string;
-    opened: boolean;
+    isOpened: boolean;
     createdAt: string;
     author: User;
     labels: Label[];
-    milestone: Milestone;
+    milestone: Milestone | null;
 }
 
 export interface IssueResponse {

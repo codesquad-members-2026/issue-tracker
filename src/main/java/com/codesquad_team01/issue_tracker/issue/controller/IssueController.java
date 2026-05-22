@@ -1,5 +1,6 @@
 package com.codesquad_team01.issue_tracker.issue.controller;
 
+import com.codesquad_team01.issue_tracker.issue.dto.request.IssueContentsRequest;
 import com.codesquad_team01.issue_tracker.issue.dto.request.IssueStatusRequest;
 import com.codesquad_team01.issue_tracker.issue.dto.request.IssueTitleUpdateRequest;
 import com.codesquad_team01.issue_tracker.issue.dto.request.IssueWriteRequest;
@@ -9,8 +10,13 @@ import com.codesquad_team01.issue_tracker.issue.dto.response.IssueListResponse;
 import com.codesquad_team01.issue_tracker.issue.service.IssueDetailService;
 import com.codesquad_team01.issue_tracker.issue.service.IssueService;
 import com.codesquad_team01.issue_tracker.issue.service.IssueWriteService;
+import com.codesquad_team01.issue_tracker.label.dto.request.LabelsChangeIssueRequest;
+import com.codesquad_team01.issue_tracker.member.dto.request.IssueAssigneesUpdateRequest;
+import com.codesquad_team01.issue_tracker.milestone.dto.request.MilestoneUpdateRequest;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import org.springframework.http.MediaType;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
+@Validated
 public class IssueController {
 
     private final IssueService issueService;
@@ -51,22 +58,22 @@ public class IssueController {
     }
 
     @GetMapping("/api/issues/{issueId}")
-    public ApiResponse<IssueDetailResponse> getIssueDetail(@PathVariable("issueId") Long issueId) {
+    public ApiResponse<IssueDetailResponse> getIssueDetail(@PathVariable @Positive Long issueId) {
         IssueDetailResponse data = issueDetailService.getIssueDetail(issueId);
 
         return ApiResponse.success("이슈 상세 페이지 로딩 성공", data);
     }
 
     @PatchMapping("/api/issues/{issueId}")
-    public ApiResponse<Void> patchIssue(@PathVariable("issueId") Long issueId,
-                                        @RequestBody IssueStatusRequest issueStatusRequest) {
+    public ApiResponse<Void> patchIssue(@PathVariable @Positive Long issueId,
+                                        @RequestBody @Valid IssueStatusRequest issueStatusRequest) {
 
         issueService.patchIssue(issueId, issueStatusRequest.status());
         return ApiResponse.success("이슈 닫기 성공", null);
     }
 
     @DeleteMapping("/api/issues/{issueId}")
-    public ApiResponse<Void> deleteIssue(@PathVariable("issueId") Long issueId) {
+    public ApiResponse<Void> deleteIssue(@PathVariable @Positive Long issueId) {
         issueService.deleteIssue(issueId);
 
         return ApiResponse.success("이슈 삭제 성공", null);
@@ -75,11 +82,49 @@ public class IssueController {
 
     @PatchMapping("/api/issues/{issueId}/title")
     public ApiResponse<Void> updateIssueTitle(
-            @PathVariable("issueId") Long issueId,
+            @PathVariable @Positive Long issueId,
             @RequestBody @Valid IssueTitleUpdateRequest request) {
 
         issueService.titleChange(issueId, request.title());
         return ApiResponse.success("이슈 제목 수정 성공", null);
     }
 
+    @PatchMapping("/api/issues/{issueId}/contents")
+    public ApiResponse<Void> updateIssueContents(
+            @PathVariable @Positive Long issueId,
+            @RequestBody IssueContentsRequest issueContentsRequest) {
+
+        issueService.contentChange(issueId, issueContentsRequest.contents());
+
+        return ApiResponse.success("본문 내용 수정 성공", null);
+    }
+
+    @PatchMapping("/api/issues/{issueId}/milestone")
+    public ApiResponse<Void> updateIssueMilestone(
+            @PathVariable @Positive Long issueId,
+            @RequestBody MilestoneUpdateRequest milestoneUpdateRequest) {
+
+        issueService.milestoneUpdate(issueId,milestoneUpdateRequest.milestoneId());
+
+        return ApiResponse.success("이슈 마일스톤 수정 완료", null);
+    }
+
+    @PatchMapping("/api/issues/{issueId}/labels")
+    public ApiResponse<Void> updateIssueLabels(
+            @PathVariable @Positive Long issueId,
+            @RequestBody LabelsChangeIssueRequest request) {
+        issueService.labelUpdate(issueId, request.labelIds());
+
+        return ApiResponse.success("이슈 레이블 수정 완료", null);
+    }
+
+    @PatchMapping("/api/issues/{issueId}/assignees")
+    public ApiResponse<Void> updateIssueAssignees(
+            @PathVariable @Positive Long issueId,
+            @RequestBody IssueAssigneesUpdateRequest request) {
+
+        issueService.assigneeUpdate(issueId, request.assigneeIds());
+
+        return ApiResponse.success("이슈 담당자 수정 완료", null);
+    }
 }

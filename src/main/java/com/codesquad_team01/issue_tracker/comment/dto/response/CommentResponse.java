@@ -1,4 +1,4 @@
-package com.codesquad_team01.issue_tracker.comment.dto;
+package com.codesquad_team01.issue_tracker.comment.dto.response;
 
 import com.codesquad_team01.issue_tracker.member.dto.response.AuthorResponse;
 import java.time.LocalDateTime;

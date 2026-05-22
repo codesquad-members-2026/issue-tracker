@@ -27,13 +27,13 @@ export default function IssueListPage() {
         const fetchIssues = async () => {
             try {
                 setIsLoading(true);
-                const response = await fetch(`http://localhost:8080/api/issues?status=${status}`);
+                const response = await fetch(`/api/issues?status=${status}`);
                 const result: IssueResponse = await response.json();
 
                 if(result.success){
                     const mappedIssues: IssueType[] = result.data.issues.map((apiIssue) => ({
                         id: apiIssue.id,
-                        status: apiIssue.opened ? 'open' : 'closed',
+                        status: apiIssue.isOpened ? 'open' : 'closed',
                         title: apiIssue.title,
                         labels: apiIssue.labels.map(label => ({
                             text: label.name,

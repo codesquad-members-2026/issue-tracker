@@ -27,5 +27,17 @@ public class Comment {
         this.deletedAt = deletedAt;
     }
 
+    public boolean isSameIssue(Long issueId) {
+        return this.issueId.equals(issueId);
+    }
+
+    public boolean isAuthor(Long authorId) {
+        return this.authorId.equals(authorId);
+    }
+
+    public void changeContents(String contents) {
+        this.contents = contents;
+    }
+
 
 }
