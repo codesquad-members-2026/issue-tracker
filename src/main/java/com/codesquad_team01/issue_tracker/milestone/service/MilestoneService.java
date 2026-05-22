@@ -2,10 +2,7 @@ package com.codesquad_team01.issue_tracker.milestone.service;
 import com.codesquad_team01.issue_tracker.milestone.domain.Milestone;
 import com.codesquad_team01.issue_tracker.milestone.domain.MilestoneState;
 import com.codesquad_team01.issue_tracker.milestone.dto.request.MilestoneWriteRequest;
-import com.codesquad_team01.issue_tracker.milestone.dto.response.MilestoneDeleteResponse;
-import com.codesquad_team01.issue_tracker.milestone.dto.response.MilestoneListItemResponse;
-import com.codesquad_team01.issue_tracker.milestone.dto.response.MilestoneListResponse;
-import com.codesquad_team01.issue_tracker.milestone.dto.response.MilestoneWriteResponse;
+import com.codesquad_team01.issue_tracker.milestone.dto.response.*;
 import com.codesquad_team01.issue_tracker.milestone.repository.MilestoneRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +18,12 @@ public class MilestoneService {
 
     public MilestoneListResponse findMilestones(MilestoneState state){
         return new MilestoneListResponse(milestoneRepository.findAllByState(state));
+    }
+
+    public MilestoneSingleResponse findMilestone(Long milestoneId){
+        return MilestoneSingleResponse
+                .from(milestoneRepository.findById(milestoneId)
+                .orElseThrow(IllegalStateException::new));
     }
 
     @Transactional
