@@ -2,7 +2,8 @@ package com.codesquad_team01.issue_tracker.milestone.controller;
 
 import com.codesquad_team01.issue_tracker.global.dto.ApiResponse;
 import com.codesquad_team01.issue_tracker.milestone.domain.MilestoneState;
-import com.codesquad_team01.issue_tracker.milestone.dto.request.MilestoneWriteRequest;
+import com.codesquad_team01.issue_tracker.milestone.dto.request.MilestoneSingleRequest;
+import com.codesquad_team01.issue_tracker.milestone.dto.request.MilestoneStateRequest;
 import com.codesquad_team01.issue_tracker.milestone.dto.response.*;
 import com.codesquad_team01.issue_tracker.milestone.service.MilestoneService;
 import jakarta.validation.Valid;
@@ -39,16 +40,17 @@ public class MilestoneController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ApiResponse<MilestoneWriteResponse> createMilestone(
-            @Valid @RequestBody MilestoneWriteRequest milestoneWriteRequest
+            @Valid @RequestBody MilestoneSingleRequest milestoneWriteRequest
     ) {
         return ApiResponse.success("마일스톤 작성 성공", milestoneService.createMilestone(milestoneWriteRequest));
     }
 
-    @PatchMapping("/{milestoneId}")
+    @PatchMapping("/{milestoneId}/state")
     public ApiResponse<MilestoneListItemResponse> updateMilestoneState(
-            @RequestParam("state") MilestoneState state,
+            @Valid @RequestBody MilestoneStateRequest milestoneStateRequest,
             @PathVariable @Min(value = 1, message = "ID는 1 이상의 양수여야 합니다.") Long milestoneId
     ){
+        MilestoneState state = milestoneStateRequest.state();
         String message = state == MilestoneState.OPEN ? "열린 마일스톤으로 상태 변경" : "닫힌 마일스톤으로 상태 변경";
         return ApiResponse.success(message, milestoneService.updateMilestoneState(state, milestoneId));
     }

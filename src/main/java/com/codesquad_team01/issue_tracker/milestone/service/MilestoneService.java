@@ -1,7 +1,7 @@
 package com.codesquad_team01.issue_tracker.milestone.service;
 import com.codesquad_team01.issue_tracker.milestone.domain.Milestone;
 import com.codesquad_team01.issue_tracker.milestone.domain.MilestoneState;
-import com.codesquad_team01.issue_tracker.milestone.dto.request.MilestoneWriteRequest;
+import com.codesquad_team01.issue_tracker.milestone.dto.request.MilestoneSingleRequest;
 import com.codesquad_team01.issue_tracker.milestone.dto.response.*;
 import com.codesquad_team01.issue_tracker.milestone.repository.MilestoneRepository;
 import org.springframework.stereotype.Service;
@@ -27,8 +27,8 @@ public class MilestoneService {
     }
 
     @Transactional
-    public MilestoneWriteResponse createMilestone(MilestoneWriteRequest milestoneWriteRequest){
-        Milestone addedMilestone = milestoneRepository.save(milestoneWriteRequest.toMilestone());
+    public MilestoneWriteResponse createMilestone(MilestoneSingleRequest milestoneSingleRequest){
+        Milestone addedMilestone = milestoneRepository.save(milestoneSingleRequest.toMilestone());
         return MilestoneWriteResponse.from(addedMilestone);
     }
 

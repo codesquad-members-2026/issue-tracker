@@ -9,7 +9,7 @@ public record MilestoneListItemResponse (
         String name,
 
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yy. MM. dd")
-        LocalDate completionDate, // TODO: 날짜 형식 yyyy. mm. dd 로 변경
+        LocalDate completionDate,
 
         String description,
         Boolean isOpened,
