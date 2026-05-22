@@ -2,11 +2,15 @@ package com.codesquad_team01.issue_tracker.milestone.controller;
 
 import com.codesquad_team01.issue_tracker.global.dto.ApiResponse;
 import com.codesquad_team01.issue_tracker.milestone.domain.MilestoneState;
+import com.codesquad_team01.issue_tracker.milestone.dto.request.MilestoneWriteRequest;
 import com.codesquad_team01.issue_tracker.milestone.dto.response.MilestoneDeleteResponse;
 import com.codesquad_team01.issue_tracker.milestone.dto.response.MilestoneListItemResponse;
 import com.codesquad_team01.issue_tracker.milestone.dto.response.MilestoneListResponse;
+import com.codesquad_team01.issue_tracker.milestone.dto.response.MilestoneWriteResponse;
 import com.codesquad_team01.issue_tracker.milestone.service.MilestoneService;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,6 +31,14 @@ public class MilestoneController {
         String message = state == MilestoneState.OPEN ?
                 "열린 모든 마일스톤 조회 성공" : "닫힌 모든 마일스톤 조회 성공";
         return ApiResponse.success(message, milestoneService.findMilestones(state));
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public ApiResponse<MilestoneWriteResponse> createMilestone(
+            @Valid @RequestBody MilestoneWriteRequest milestoneWriteRequest
+    ) {
+        return ApiResponse.success("마일스톤 작성 성공", milestoneService.createMilestone(milestoneWriteRequest));
     }
 
     @PatchMapping("/{milestoneId}")
