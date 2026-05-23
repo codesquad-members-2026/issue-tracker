@@ -1,4 +1,5 @@
 package com.codesquad_team01.issue_tracker.milestone.service;
+import com.codesquad_team01.issue_tracker.label.repository.LabelRepository;
 import com.codesquad_team01.issue_tracker.milestone.domain.Milestone;
 import com.codesquad_team01.issue_tracker.milestone.domain.MilestoneState;
 import com.codesquad_team01.issue_tracker.milestone.dto.request.MilestoneSingleRequest;
@@ -7,17 +8,25 @@ import com.codesquad_team01.issue_tracker.milestone.repository.MilestoneReposito
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Transactional(readOnly = true)
 public class MilestoneService {
     private final MilestoneRepository milestoneRepository;
+    private final LabelRepository labelRepository;
 
-    public MilestoneService(MilestoneRepository milestoneRepository) {
+    public MilestoneService(MilestoneRepository milestoneRepository, LabelRepository labelRepository) {
         this.milestoneRepository = milestoneRepository;
+        this.labelRepository = labelRepository;
     }
 
     public MilestoneListResponse findMilestones(MilestoneState state){
-        return new MilestoneListResponse(milestoneRepository.findAllByState(state));
+        List<MilestoneListItemResponse> milestoneListItemResponses = milestoneRepository.findAllByState(state);
+        MilestoneMetaData milestoneMetaData = new MilestoneMetaData(
+                labelRepository.countByDeletedAtIsNull(), milestoneRepository.countByDeletedAtIsNull());
+
+        return new MilestoneListResponse(milestoneMetaData, milestoneListItemResponses);
     }
 
     public MilestoneSingleResponse findMilestone(Long milestoneId){
