@@ -1,7 +1,7 @@
 // src/components/LabelForm.tsx
 import { useState } from "react";
 import Badge from "../Badge.tsx";
-import { getRandomColor, getContrastColor } from "../utils/color.ts";
+import { getRandomColor, getContrastColor } from "../../utils/color.ts";
 
 interface LabelData {
     id?: number;
