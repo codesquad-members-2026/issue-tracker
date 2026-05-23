@@ -1,6 +1,6 @@
 import { useState } from "react";
-import type { Comment as CommentType } from "../types/Issue";
-import { getRelativeTime } from "../utils/date";
+import type { Comment as CommentType } from "../../types/Issue";
+import { getRelativeTime } from "../../utils/date";
 
 interface CommentItemProps {
     comment: CommentType;

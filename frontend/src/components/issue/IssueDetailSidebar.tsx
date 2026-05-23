@@ -1,5 +1,5 @@
 import ListFilterDropdown from "./ListFilterDropdown.tsx";
-import type { IssueDetail, User, Label, Milestone } from "../types/Issue";
+import type { IssueDetail, User, Label, Milestone } from "../../types/Issue";
 
 interface IssueDetailSidebarProps {
     issue: IssueDetail;
@@ -33,17 +33,17 @@ export default function IssueDetailSidebar({
     onMilestoneUpdate
 }: IssueDetailSidebarProps) {
     const handleToggleAssignee = (memberId: number) => {
-        const currentIds = issue.assignees.map(a => a.id);
+        const currentIds = issue.assignees.map((a: User) => a.id);
         const newIds = currentIds.includes(memberId)
-            ? currentIds.filter(id => id !== memberId)
+            ? currentIds.filter((id: number) => id !== memberId)
             : [...currentIds, memberId];
         void onAssigneesUpdate(newIds);
     };
 
     const handleToggleLabel = (labelId: number) => {
-        const currentIds = issue.labels.map(l => l.id);
+        const currentIds = issue.labels.map((l: Label) => l.id);
         const newIds = currentIds.includes(labelId)
-            ? currentIds.filter(id => id !== labelId)
+            ? currentIds.filter((id: number) => id !== labelId)
             : [...currentIds, labelId];
         void onLabelsUpdate(newIds);
     };
@@ -69,8 +69,8 @@ export default function IssueDetailSidebar({
                                         onClick={() => handleToggleAssignee(member.id)}
                                         className="w-full h-[44px] px-4 py-2 bg-[#FEFEFE] hover:bg-[#F7F7FC] flex items-center justify-between transition-colors"
                                     >
-                                        <span className={`text-[16px] text-[#14142B] ${issue.assignees.some(a => a.id === member.id) ? 'font-bold' : 'font-medium'}`}>{member.name}</span>
-                                        <CheckIcon isSelected={issue.assignees.some(a => a.id === member.id)} />
+                                        <span className={`text-[16px] text-[#14142B] ${issue.assignees.some((a: User) => a.id === member.id) ? 'font-bold' : 'font-medium'}`}>{member.name}</span>
+                                        <CheckIcon isSelected={issue.assignees.some((a: User) => a.id === member.id)} />
                                     </button>
                                 ))}
                             </div>
@@ -80,7 +80,7 @@ export default function IssueDetailSidebar({
                         {issue.assignees.length === 0 ? (
                             <span className="text-sm text-slate-400">담당자 없음</span>
                         ) : (
-                            issue.assignees.map(assignee => (
+                            issue.assignees.map((assignee: User) => (
                                 <div key={assignee.id} className="flex items-center gap-2">
                                     <img
                                         src={`https://avatars.githubusercontent.com/${assignee.name}?s=20&v=4`}
@@ -109,9 +109,9 @@ export default function IssueDetailSidebar({
                                     >
                                         <div className="flex items-center gap-2">
                                             <div className="w-3 h-3 rounded-full" style={{backgroundColor: label.backgroundColor}} />
-                                            <span className={`text-[16px] text-[#14142B] ${issue.labels.some(l => l.id === label.id) ? 'font-bold' : 'font-medium'}`}>{label.name}</span>
+                                            <span className={`text-[16px] text-[#14142B] ${issue.labels.some((l: Label) => l.id === label.id) ? 'font-bold' : 'font-medium'}`}>{label.name}</span>
                                         </div>
-                                        <CheckIcon isSelected={issue.labels.some(l => l.id === label.id)} />
+                                        <CheckIcon isSelected={issue.labels.some((l: Label) => l.id === label.id)} />
                                     </button>
                                 ))}
                             </div>
@@ -121,7 +121,7 @@ export default function IssueDetailSidebar({
                         {issue.labels.length === 0 ? (
                             <span className="text-sm text-slate-400">레이블 없음</span>
                         ) : (
-                            issue.labels.map(label => (
+                            issue.labels.map((label: Label) => (
                                 <span
                                     key={label.id}
                                     className="px-3 py-1 rounded-full text-xs font-bold"
