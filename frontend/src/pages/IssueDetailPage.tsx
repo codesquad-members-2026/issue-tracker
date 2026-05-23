@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import CommentItem from "../components/CommentItem.tsx";
-import CommentInput from "../components/CommentInput.tsx";
-import IssueDetailHeader from "../components/IssueDetailHeader.tsx";
-import IssueDetailSidebar from "../components/IssueDetailSidebar.tsx";
+import CommentItem from "../components/issue/CommentItem.tsx";
+import CommentInput from "../components/issue/CommentInput.tsx";
+import IssueDetailHeader from "../components/issue/IssueDetailHeader.tsx";
+import IssueDetailSidebar from "../components/issue/IssueDetailSidebar.tsx";
 import type { IssueDetail, IssueDetailResponse, Comment, User, Label, Milestone } from "../types/Issue";
 
 export default function IssueDetailPage() {
