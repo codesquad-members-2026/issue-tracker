@@ -20,6 +20,18 @@ export function getContrastColor(hexColor: string): "white" | "black" {
 }
 
 /**
+ * 전역 색상 상수
+ */
+export const COLORS = {
+    BLUE: "#007AFF",
+    RED: "#FF3B30",
+    GRAY: "#D9DBE9",
+    LIGHT_GRAY: "#F7F7FC",
+    TEXT_DEFAULT: "#14142B",
+    TEXT_SLATE: "#4E4B66",
+};
+
+/**
  * 랜덤한 HEX 색상 코드를 생성합니다.
  */
 export function getRandomColor(): string {
