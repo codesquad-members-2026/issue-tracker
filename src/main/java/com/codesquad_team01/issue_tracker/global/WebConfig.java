@@ -9,8 +9,10 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("http://localhost:5173")
+                .allowedOrigins(
+                        "http://localhost:5173",
+                        "http://team01-issue-tracker-frontend-deploy.s3-website.ap-northeast-2.amazonaws.com/labels")
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH")
-                .allowCredentials(true); // TODO: 추후 JWT를 로컬 스토리지에 두고 헤더에 직접 넣는 방식을 채택할 경우 .allowedHeaders("Authorization")을 추가로 열어야 함 -> 그때가서 공부
+                .allowCredentials(true);
     }
 }
