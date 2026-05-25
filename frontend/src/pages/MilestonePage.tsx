@@ -142,11 +142,12 @@ export default function MilestonePage() {
 
     // 5. 상태 변경 (열기/닫기)
     const handleToggleStatus = async (milestone: Milestone) => {
+        const nextState = milestone.isOpened ? "CLOSED" : "OPEN";
         try {
             const response = await fetch(`http://localhost:8080/api/milestones/${milestone.id}/state`, {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ isOpened: !milestone.isOpened })
+                body: JSON.stringify({ state: nextState })
             });
             const result = await response.json();
             if (result.success) {
