@@ -25,15 +25,47 @@ function FormInputRow({ label, children }: { label: string; children: React.Reac
     );
 }
 
+/**
+ * 'yy. MM. dd' 형식을 'YYYY-MM-DD' 형식으로 변환합니다.
+ */
+function formatDateForInput(dateStr: string | undefined): string {
+    if (!dateStr) return "";
+    // 이미 'YYYY-MM-DD' 형식인 경우 그대로 반환
+    if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return dateStr;
+    
+    // 'yy. MM. dd' -> '20yy-MM-DD' 변환
+    const parts = dateStr.split(".").map(p => p.trim());
+    if (parts.length === 3) {
+        const year = parts[0].length === 2 ? `20${parts[0]}` : parts[0];
+        const month = parts[1].padStart(2, "0");
+        const day = parts[2].padStart(2, "0");
+        return `${year}-${month}-${day}`;
+    }
+    return "";
+}
+
+/**
+ * 'YYYY-MM-DD' 형식을 'yyyy. MM. dd' 형식으로 변환합니다.
+ */
+function formatDateForServer(dateStr: string): string {
+    if (!dateStr) return "";
+    const parts = dateStr.split("-");
+    if (parts.length === 3) {
+        return `${parts[0]}. ${parts[1]}. ${parts[2]}`;
+    }
+    return dateStr;
+}
+
 export default function MilestoneForm({ mode, initialData, onClose, onSave }: MilestoneFormProps) {
+    const formattedDate = formatDateForInput(initialData?.completionDate);
     const [name, setName] = useState(initialData?.name || "");
     const [description, setDescription] = useState(initialData?.description || "");
-    const [completionDate, setCompletionDate] = useState(initialData?.completionDate || "");
+    const [completionDate, setCompletionDate] = useState(formattedDate);
 
     const isUnchanged = mode === "edit" && 
         name === initialData?.name && 
         description === initialData?.description && 
-        completionDate === initialData?.completionDate;
+        completionDate === formattedDate;
 
     const handleSubmit = () => {
         if (!name.trim() || isUnchanged) return;
@@ -41,9 +73,11 @@ export default function MilestoneForm({ mode, initialData, onClose, onSave }: Mi
             id: initialData?.id,
             name,
             description,
-            completionDate
+            completionDate: formatDateForServer(completionDate)
         });
     };
+
+    const today = new Date().toISOString().split("T")[0];
 
     return (
         <div className={`bg-white border border-slate-200 rounded-xl shadow-sm p-8 animate-in fade-in slide-in-from-top-4 duration-300 ${mode === "create" ? "mb-6" : ""}`}>
@@ -67,15 +101,16 @@ export default function MilestoneForm({ mode, initialData, onClose, onSave }: Mi
                     <div className="w-1/3">
                         <FormInputRow label="완료일(선택)">
                             <input 
-                                type="text" 
-                                placeholder="YYYY-MM-DD"
-                                className="w-full bg-transparent focus:outline-none text-sm font-['Pretendard']"
+                                type="date" 
+                                min={today}
+                                className="w-full bg-transparent focus:outline-none text-sm font-['Pretendard'] cursor-pointer"
                                 value={completionDate}
                                 onChange={(e) => setCompletionDate(e.target.value)}
                             />
                         </FormInputRow>
                     </div>
                 </div>
+
 
                 <FormInputRow label="설명(선택)">
                     <input 
