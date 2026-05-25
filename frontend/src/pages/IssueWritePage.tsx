@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import ListFilterDropdown from "../components/ListFilterDropdown.tsx";
+import { useImageUpload } from "../hooks/useImageUpload";
 
 // 데이터 타입 정의
 interface Member { id: number; name: string; }
@@ -24,6 +25,8 @@ export default function IssueWritePage() {
     const [selectedMemberIds, setSelectedMemberIds] = useState<number[]>([]);
     const [selectedLabelIds, setSelectedLabelIds] = useState<number[]>([]);
     const [selectedMilestoneId, setSelectedMilestoneId] = useState<number | null>(null);
+
+    const { triggerUpload, handleFileChange, fileInputRef } = useImageUpload(contents, setContents);
 
     // 페이지 로드 시 실제 DB 데이터 호출
     useEffect(() => {
@@ -118,10 +121,29 @@ export default function IssueWritePage() {
                         <div className="relative">
                             <textarea
                                 placeholder="코멘트를 입력하세요"
-                                className="w-full h-96 p-4 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#007AFF] resize-none"
+                                className="w-full h-96 p-4 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#007AFF] resize-none pb-12"
                                 value={contents}
                                 onChange={(e) => setContents(e.target.value)}
                             />
+                            <div className="absolute bottom-4 left-4 flex items-center gap-4 text-xs font-bold text-slate-500">
+                                <button 
+                                    type="button"
+                                    onClick={triggerUpload}
+                                    className="flex items-center gap-1 hover:text-slate-700 transition-colors bg-white/80 px-2 py-1 rounded border border-slate-200"
+                                >
+                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.414a4 4 0 00-5.656-5.656l-6.415 6.414a6 6 0 108.486 8.486L20.5 13" />
+                                    </svg>
+                                    파일 첨부
+                                </button>
+                                <input
+                                    type="file"
+                                    ref={fileInputRef}
+                                    onChange={handleFileChange}
+                                    className="hidden"
+                                    accept="image/*"
+                                />
+                            </div>
                             <div className="absolute bottom-4 right-4 text-sm text-slate-400">
                                 띄어쓰기 포함 {contents.length}자
                             </div>
