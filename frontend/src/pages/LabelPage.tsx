@@ -38,7 +38,7 @@ export default function LabelPage() {
     useEffect(() => {
         const fetchLabels = async () => {
             try {
-                const response = await fetch("http://localhost:8080/api/labels");
+                const response = await fetch(`${import.meta.env.VITE_API_URL}/api/labels`);
                 const result: LabelPageResponse = await response.json();
                 if (result.success) {
                     setLabels(result.data.labels);
@@ -59,7 +59,7 @@ export default function LabelPage() {
     const handleEditStart = async (label: Label) => {
         setIsAdding(false);
         try {
-            const response = await fetch(`http://localhost:8080/api/labels/${label.id}`);
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/labels/${label.id}`);
             const result = await response.json();
             if (result.success) {
                 setEditingLabelData(result.data);
@@ -74,7 +74,7 @@ export default function LabelPage() {
 
     const handleSave = async (data: { name: string; description: string; backgroundColor: string; textColor: string }) => {
         const isEdit = !!editingLabelId;
-        const url = isEdit ? `http://localhost:8080/api/labels/${editingLabelId}` : "http://localhost:8080/api/labels";
+        const url = isEdit ? `${import.meta.env.VITE_API_URL}/api/labels/${editingLabelId}` : `${import.meta.env.VITE_API_URL}/api/labels`;
         const method = isEdit ? "PATCH" : "POST";
 
         try {
@@ -109,7 +109,7 @@ export default function LabelPage() {
     const handleDelete = async (id: number) => {
         if (!window.confirm("정말로 이 레이블을 삭제하시겠습니까?")) return;
         try {
-            const response = await fetch(`http://localhost:8080/api/labels/${id}`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/labels/${id}`, {
                 method: "DELETE"
             });
             const result = await response.json();

@@ -24,7 +24,7 @@ export default function IssueDetailPage() {
     useEffect(() => {
         const fetchIssueDetail = async () => {
             try {
-                const response = await fetch(`/api/issues/${id}`);
+                const response = await fetch(`${import.meta.env.VITE_API_URL}/api/issues/${id}`);
                 const result: IssueDetailResponse = await response.json();
 
                 if (result.success) {
@@ -46,9 +46,9 @@ export default function IssueDetailPage() {
         const fetchAllMetadata = async () => {
             try {
                 const [mRes, lRes, miRes] = await Promise.all([
-                    fetch("/api/members"),
-                    fetch("/api/labels"),
-                    fetch("/api/milestones")
+                    fetch(`${import.meta.env.VITE_API_URL}/api/members`),
+                    fetch(`${import.meta.env.VITE_API_URL}/api/labels`),
+                    fetch(`${import.meta.env.VITE_API_URL}/api/milestones`)
                 ]);
 
                 const mResult = await mRes.json();
@@ -77,7 +77,7 @@ export default function IssueDetailPage() {
         if (!window.confirm(confirmMessage)) return;
 
         try {
-            const response = await fetch(`/api/issues/${id}`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/issues/${id}`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json"
@@ -101,7 +101,7 @@ export default function IssueDetailPage() {
         if (!window.confirm("정말로 이 이슈를 삭제하시겠습니까?")) return;
 
         try {
-            const response = await fetch(`/api/issues/${id}`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/issues/${id}`, {
                 method: "DELETE"
             });
             const result = await response.json();
@@ -124,7 +124,7 @@ export default function IssueDetailPage() {
         }
 
         try {
-            const response = await fetch(`/api/issues/${id}/title`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/issues/${id}/title`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json"
@@ -151,7 +151,7 @@ export default function IssueDetailPage() {
         }
 
         try {
-            const response = await fetch(`/api/issues/${id}/contents`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/issues/${id}/contents`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json"
@@ -173,7 +173,7 @@ export default function IssueDetailPage() {
 
     const handleCommentUpdate = async (commentId: number, contents: string) => {
         try {
-            const response = await fetch(`/api/issues/${id}/comments/${commentId}`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/issues/${id}/comments/${commentId}`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json"
@@ -203,7 +203,7 @@ export default function IssueDetailPage() {
 
     const handleCommentSubmit = async (contents: string) => {
         try {
-            const response = await fetch(`/api/issues/${id}/comments`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/issues/${id}/comments`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -230,7 +230,7 @@ export default function IssueDetailPage() {
 
     const handleAssigneesUpdate = async (assigneeIds: number[]) => {
         try {
-            const response = await fetch(`/api/issues/${id}/assignees`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/issues/${id}/assignees`, {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ assigneeIds })
@@ -249,7 +249,7 @@ export default function IssueDetailPage() {
 
     const handleLabelsUpdate = async (labelIds: number[]) => {
         try {
-            const response = await fetch(`/api/issues/${id}/labels`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/issues/${id}/labels`, {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ labelIds })
@@ -268,7 +268,7 @@ export default function IssueDetailPage() {
 
     const handleMilestoneUpdate = async (milestoneId: number | null) => {
         try {
-            const response = await fetch(`/api/issues/${id}/milestone`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/issues/${id}/milestone`, {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ milestoneId })

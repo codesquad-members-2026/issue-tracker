@@ -39,15 +39,15 @@ export default function MilestonePage() {
     const fetchData = useCallback(async () => {
         try {
             // 레이블/마일스톤 메타데이터 (전체 개수용)
-            const metaRes = await fetch("http://localhost:8080/api/labels");
+            const metaRes = await fetch(`${import.meta.env.VITE_API_URL}/api/labels`);
             const metaResult = await metaRes.json();
             
             // 열린 마일스톤 목록
-            const openRes = await fetch("http://localhost:8080/api/milestones?state=OPEN");
+            const openRes = await fetch(`${import.meta.env.VITE_API_URL}/api/milestones?state=OPEN`);
             const openResult: MilestoneListResponse = await openRes.json();
 
             // 닫힌 마일스톤 목록
-            const closedRes = await fetch("http://localhost:8080/api/milestones?state=CLOSED");
+            const closedRes = await fetch(`${import.meta.env.VITE_API_URL}/api/milestones?state=CLOSED`);
             const closedResult: MilestoneListResponse = await closedRes.json();
 
             if (metaResult.success && openResult.success && closedResult.success) {
@@ -82,7 +82,7 @@ export default function MilestonePage() {
     const handleEditStart = async (milestone: Milestone) => {
         setIsAdding(false);
         try {
-            const response = await fetch(`http://localhost:8080/api/milestones/${milestone.id}`);
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/milestones/${milestone.id}`);
             const result = await response.json();
             if (result.success) {
                 setEditingData(result.data);
@@ -98,7 +98,7 @@ export default function MilestonePage() {
     // 3. 저장 (생성/수정)
     const handleSave = async (data: { name: string; description: string; completionDate: string }) => {
         const isEdit = !!editingId;
-        const url = isEdit ? `http://localhost:8080/api/milestones/${editingId}` : "http://localhost:8080/api/milestones";
+        const url = isEdit ? `${import.meta.env.VITE_API_URL}/api/milestones/${editingId}` : `${import.meta.env.VITE_API_URL}/api/milestones`;
         const method = isEdit ? "PATCH" : "POST";
 
         try {
@@ -128,7 +128,7 @@ export default function MilestonePage() {
     const handleDelete = async (id: number) => {
         if (!window.confirm("정말로 이 마일스톤을 삭제하시겠습니까?")) return;
         try {
-            const response = await fetch(`http://localhost:8080/api/milestones/${id}`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/milestones/${id}`, {
                 method: "DELETE"
             });
             const result = await response.json();
@@ -144,7 +144,7 @@ export default function MilestonePage() {
     const handleToggleStatus = async (milestone: Milestone) => {
         const nextState = milestone.isOpened ? "CLOSED" : "OPEN";
         try {
-            const response = await fetch(`http://localhost:8080/api/milestones/${milestone.id}/state`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/milestones/${milestone.id}/state`, {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ state: nextState })

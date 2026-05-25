@@ -27,7 +27,7 @@ export default function IssueListPage() {
         const fetchIssues = async () => {
             try {
                 setIsLoading(true);
-                const response = await fetch(`http://localhost:8080/api/issues?status=${status}`);
+                const response = await fetch(`${import.meta.env.VITE_API_URL}/api/issues?status=${status}`);
                 const result: IssueResponse = await response.json();
 
                 if(result.success){
