@@ -7,6 +7,7 @@ import IssueDetailPage from './pages/IssueDetailPage.tsx';
 import LabelPage from './pages/LabelPage.tsx';
 import MilestonePage from './pages/MilestonePage.tsx';
 
+// 테스트 주석
 function App() {
     return (
         <BrowserRouter> {/* 브라우저 라우터로 전체를 감쌉니다 */}
