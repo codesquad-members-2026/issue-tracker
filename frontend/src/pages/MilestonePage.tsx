@@ -35,26 +35,37 @@ export default function MilestonePage() {
     const [editingId, setEditingId] = useState<number | null>(null);
     const [editingData, setEditingData] = useState<Milestone | null>(null);
 
-    // 1. 전체 개수 및 목록 조회 (useCallback 적용)
+    // 1. 전체 데이터 및 목록 조회
     const fetchData = useCallback(async () => {
         try {
-            const countRes = await fetch("http://localhost:8080/api/labels");
-            const countResult = await countRes.json();
+            // 레이블/마일스톤 메타데이터 (전체 개수용)
+            const metaRes = await fetch("http://localhost:8080/api/labels");
+            const metaResult = await metaRes.json();
             
-            const milestoneRes = await fetch(`http://localhost:8080/api/milestones?state=${isOpenedFilter ? 'OPEN' : 'CLOSED'}`);
-            const milestoneResult: MilestoneListResponse = await milestoneRes.json();
+            // 열린 마일스톤 목록
+            const openRes = await fetch("http://localhost:8080/api/milestones?state=OPEN");
+            const openResult: MilestoneListResponse = await openRes.json();
 
-            if (countResult.success && milestoneResult.success) {
-                setMilestones(milestoneResult.data.milestones);
+            // 닫힌 마일스톤 목록
+            const closedRes = await fetch("http://localhost:8080/api/milestones?state=CLOSED");
+            const closedResult: MilestoneListResponse = await closedRes.json();
+
+            if (metaResult.success && openResult.success && closedResult.success) {
+                const openMilestones = openResult.data.milestones;
+                const closedMilestones = closedResult.data.milestones;
+                
+                // 현재 필터에 맞는 목록 표시
+                setMilestones(isOpenedFilter ? openMilestones : closedMilestones);
+                
                 setCounts({
-                    label: countResult.data.metadata.labelCount,
-                    milestone: countResult.data.metadata.milestoneCount,
-                    openMilestone: isOpenedFilter ? milestoneResult.data.milestones.length : 0,
-                    closedMilestone: !isOpenedFilter ? milestoneResult.data.milestones.length : 0
+                    label: metaResult.data.metadata.labelCount,
+                    milestone: metaResult.data.metadata.milestoneCount,
+                    openMilestone: openMilestones.length,
+                    closedMilestone: closedMilestones.length
                 });
             }
         } catch (error) {
-            console.error("마일스톤 로딩 실패:", error);
+            console.error("데이터 로딩 실패:", error);
         }
     }, [isOpenedFilter]);
 
@@ -172,11 +183,12 @@ export default function MilestonePage() {
 
             <ListContainer>
                 <MilestoneListHeader 
-                    openCount={isOpenedFilter ? milestones.length : 0} // 백엔드 개수 집계 API 추가 필요시 수정
-                    closedCount={!isOpenedFilter ? milestones.length : 0} 
+                    openCount={counts.openMilestone}
+                    closedCount={counts.closedMilestone} 
                     isOpened={isOpenedFilter}
                     onStatusChange={setIsOpenedFilter}
                 />
+
 
                 <div className="flex flex-col">
                     {isLoading ? (
