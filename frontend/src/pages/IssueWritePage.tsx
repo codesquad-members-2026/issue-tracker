@@ -30,9 +30,9 @@ export default function IssueWritePage() {
         const fetchAllMetadata = async () => {
             try {
                 const [mRes, lRes, miRes] = await Promise.all([
-                    fetch("/api/members"),
-                    fetch("/api/labels"),
-                    fetch("/api/milestones")
+                    fetch(`${import.meta.env.VITE_API_URL}/api/members`),
+                    fetch(`${import.meta.env.VITE_API_URL}/api/labels`),
+                    fetch(`${import.meta.env.VITE_API_URL}/api/milestones`)
                 ]);
 
                 const mResult = await mRes.json();
@@ -72,7 +72,7 @@ export default function IssueWritePage() {
             const requestBlob = new Blob([JSON.stringify(issueData)], { type: 'application/json' });
             formData.append('request', requestBlob);
 
-            const response = await fetch("/api/issues", {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/issues`, {
                 method: "POST",
                 body: formData,
             });
