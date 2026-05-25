@@ -1,5 +1,6 @@
 package com.codesquad_team01.issue_tracker.attachment.Service;
 
+import io.awspring.cloud.s3.ObjectMetadata;
 import io.awspring.cloud.s3.S3Resource;
 import io.awspring.cloud.s3.S3Template;
 import lombok.RequiredArgsConstructor;
@@ -27,11 +28,13 @@ public class S3ImageUploadService {
         }
 
         String originalFilename = file.getOriginalFilename();
-        String storeFilename = createStoreFilename(originalFilename);
+        String storeFilename = "images/" +
+                createStoreFilename(originalFilename);
 
         try (InputStream inputStream = file.getInputStream()) {
 
-            S3Resource s3Resource = s3Template.upload(bucket, storeFilename, inputStream);
+            S3Resource s3Resource = s3Template.upload(bucket, storeFilename, inputStream,
+                    ObjectMetadata.builder().contentType(file.getContentType()).build());
 
             return s3Resource.getURL().toString();
 
