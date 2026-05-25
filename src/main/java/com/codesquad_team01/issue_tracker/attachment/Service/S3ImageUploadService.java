@@ -27,7 +27,8 @@ public class S3ImageUploadService {
         }
 
         String originalFilename = file.getOriginalFilename();
-        String storeFilename = createStoreFilename(originalFilename);
+        String storeFilename = "images/" +
+                createStoreFilename(originalFilename);
 
         try (InputStream inputStream = file.getInputStream()) {
 
