@@ -41,7 +41,7 @@ public class LabelControllerTest {
     @Test
     @DisplayName("GET /api/labels 요청이 온 뒤 정상적으로 레이블 목록과 마일스톤의 개수를 조회하면 200 OK와 통합 데이터를 반환한다.")
     public void getLabels_Success() throws Exception {
-        LabelMetaData labelMetaData = new LabelMetaData(3, 1);
+        LabelMetaData labelMetaData = new LabelMetaData(3L, 1L);
         LabelListResponse label1 = new LabelListResponse(1L, "라벨1", "라벨1의 설명", "#000000", "#FCFBFB");
         LabelListResponse label2 = new LabelListResponse(2L, "라벨2", "라벨2의 설명", "#000000", "#FCFBFB");
 

@@ -2,7 +2,6 @@ package com.codesquad_team01.issue_tracker.milestone.repository;
 
 import com.codesquad_team01.issue_tracker.milestone.domain.Milestone;
 import com.codesquad_team01.issue_tracker.milestone.domain.MilestoneState;
-import com.codesquad_team01.issue_tracker.milestone.dto.request.MilestoneSingleRequest;
 import com.codesquad_team01.issue_tracker.milestone.dto.response.MilestoneListItemResponse;
 import org.springframework.data.jdbc.repository.query.Modifying;
 import org.springframework.data.jdbc.repository.query.Query;
@@ -14,9 +13,6 @@ import java.util.Optional;
 
 public interface MilestoneRepository extends ListCrudRepository<Milestone, Long> {
 
-    @Query("SELECT * FROM milestone WHERE name = :name " +
-            "AND deleted_at is null")
-    List<Milestone> findByName(String name);
     long countByDeletedAtIsNull();
 
     @Query("SELECT " +
