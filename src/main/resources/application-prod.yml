@@ -19,3 +19,7 @@ logging:
     root: INFO
     # 자바 프로젝트 기본 패키지(Base Package) 경로 / src/main/java/com/codesquad_team01/issue_tracker
     com.codesquad_team01.issue_tracker: INFO
+
+jwt:
+  secret: ${JWT_SECRET_KEY}
+  access-token-expiration: 3600000
