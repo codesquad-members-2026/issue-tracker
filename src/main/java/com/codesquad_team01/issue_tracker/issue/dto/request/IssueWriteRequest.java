@@ -9,13 +9,13 @@ public record IssueWriteRequest(
         String contents,
 
         List<Long> assigneeIds,
-        List<Long> labelsIds,
+        List<Long> labelIds,
         Long milestoneId
 ) {
 
     public IssueWriteRequest {
 
         assigneeIds = assigneeIds != null ? assigneeIds : List.of();
-        labelsIds = labelsIds != null ? labelsIds : List.of();
+        labelIds = labelIds != null ? labelIds : List.of();
     }
 }

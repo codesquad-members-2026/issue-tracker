@@ -1,7 +1,7 @@
 // src/pages/IssueWritePage.tsx
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import ListFilterDropdown from "../components/ListFilterDropdown.tsx";
+import ListFilterDropdown from "../components/issue/ListFilterDropdown.tsx";
 
 // 데이터 타입 정의
 interface Member { id: number; name: string; }
@@ -30,9 +30,9 @@ export default function IssueWritePage() {
         const fetchAllMetadata = async () => {
             try {
                 const [mRes, lRes, miRes] = await Promise.all([
-                    fetch("http://localhost:8080/api/members"),
-                    fetch("http://localhost:8080/api/labels"),
-                    fetch("http://localhost:8080/api/milestones")
+                    fetch(`${import.meta.env.VITE_API_URL}/api/members`),
+                    fetch(`${import.meta.env.VITE_API_URL}/api/labels`),
+                    fetch(`${import.meta.env.VITE_API_URL}/api/milestones`)
                 ]);
 
                 const mResult = await mRes.json();
@@ -64,7 +64,7 @@ export default function IssueWritePage() {
                 contents: contents.trim(),
                 authorId: 1,
                 assigneeIds: selectedMemberIds,
-                labelsIds: selectedLabelIds,
+                labelIds: selectedLabelIds,
                 milestoneId: selectedMilestoneId
             };
 
@@ -72,7 +72,7 @@ export default function IssueWritePage() {
             const requestBlob = new Blob([JSON.stringify(issueData)], { type: 'application/json' });
             formData.append('request', requestBlob);
 
-            const response = await fetch("http://localhost:8080/api/issues", {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/issues`, {
                 method: "POST",
                 body: formData,
             });

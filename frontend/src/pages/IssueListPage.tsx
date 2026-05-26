@@ -1,11 +1,11 @@
 // src/pages/IssueListPage.tsx
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import FilterBar from "../components/FilterBar.tsx";
-import LabelMilestoneTabs from "../components/LabelMilestoneTabs.tsx";
-import IssueListHeader from "../components/IssueListHeader.tsx";
-import IssueItem, {type IssueType} from "../components/IssueItem.tsx";
-import IssueSelectionHeader from "../components/IssueSelectionHeader.tsx";
+import FilterBar from "../components/issue/FilterBar.tsx";
+import TabNavigation from "../components/TabNavigation.tsx";
+import IssueListHeader from "../components/issue/IssueListHeader.tsx";
+import IssueItem, {type IssueType} from "../components/issue/IssueItem.tsx";
+import IssueSelectionHeader from "../components/issue/IssueSelectionHeader.tsx";
 import type { IssueResponse } from "../types/Issue";
 
 export default function IssueListPage() {
@@ -27,7 +27,7 @@ export default function IssueListPage() {
         const fetchIssues = async () => {
             try {
                 setIsLoading(true);
-                const response = await fetch(`http://localhost:8080/api/issues?status=${status}`);
+                const response = await fetch(`${import.meta.env.VITE_API_URL}/api/issues?status=${status}`);
                 const result: IssueResponse = await response.json();
 
                 if(result.success){
@@ -86,7 +86,7 @@ export default function IssueListPage() {
             <div className="flex justify-between items-center mb-6">
                 <FilterBar />
                 <div className="flex items-center gap-6">
-                    <LabelMilestoneTabs
+                    <TabNavigation
                         labelCount={counts.label}
                         milestoneCount={counts.milestone}
                     />
