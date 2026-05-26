@@ -96,7 +96,7 @@ export default function CommentItem({
                             />
                             <div className="flex justify-between items-center">
                                 <div className="flex items-center gap-4 text-xs font-bold text-slate-500">
-                                    <button 
+                                    <button
                                         type="button"
                                         onClick={triggerUpload}
                                         className="flex items-center gap-1 hover:text-slate-700 transition-colors"
@@ -133,7 +133,7 @@ export default function CommentItem({
                         </div>
                     ) : (
                         <div className={`prose prose-slate max-w-none leading-relaxed ${isMainContent ? 'text-lg' : 'text-base'} ${!contents ? 'text-slate-400 italic' : 'text-[#4E4B66]'}`}>
-                            <ReactMarkdown 
+                            <ReactMarkdown
                                 remarkPlugins={[remarkGfm]}
                                 components={{
                                     img: ({node, ...props}) => <img {...props} className="max-w-full rounded-lg my-4 border border-slate-200" />,

@@ -1,5 +1,5 @@
-import { getRelativeTime } from "../utils/date";
-import type { IssueDetail } from "../types/Issue";
+import { getRelativeTime } from "../../utils/date";
+import type { IssueDetail } from "../../types/Issue";
 
 interface IssueDetailHeaderProps {
     issue: IssueDetail;

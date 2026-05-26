@@ -4,7 +4,10 @@ import Header from './components/Header.tsx';
 import IssueListPage from './pages/IssueListPage.tsx';
 import IssueWritePage from './pages/IssueWritePage.tsx'; // 작성 페이지 임포트
 import IssueDetailPage from './pages/IssueDetailPage.tsx';
+import LabelPage from './pages/LabelPage.tsx';
+import MilestonePage from './pages/MilestonePage.tsx';
 
+// 테스트 주석
 function App() {
     return (
         <BrowserRouter> {/* 브라우저 라우터로 전체를 감쌉니다 */}
@@ -22,10 +25,19 @@ function App() {
 
                     {/* 이슈 상세 페이지 */}
                     <Route path="/issues/:id" element={<IssueDetailPage />} />
+
+                    {/* 레이블 목록 페이지 */}
+                    <Route path="/labels" element={<LabelPage />} />
+
+                    {/* 마일스톤 목록 페이지 */}
+                    <Route path="/milestones" element={<MilestonePage />} />
                 </Routes>
             </div>
         </BrowserRouter>
     );
 }
+
+
+
 
 export default App;

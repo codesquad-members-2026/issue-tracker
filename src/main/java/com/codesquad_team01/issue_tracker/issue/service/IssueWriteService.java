@@ -27,7 +27,7 @@ public class IssueWriteService {
                 .map(memberId -> new Assignee(null, memberId))
                 .collect(Collectors.toSet());
 
-        Set<IssueLabel> issueLabels = issueWriteRequest.labelsIds().stream()
+        Set<IssueLabel> issueLabels = issueWriteRequest.labelIds().stream()
                 .map(labelId -> new IssueLabel(null, labelId))
                 .collect(Collectors.toSet());
 

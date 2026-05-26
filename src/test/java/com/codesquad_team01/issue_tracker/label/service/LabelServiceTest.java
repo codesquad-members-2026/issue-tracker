@@ -43,14 +43,16 @@ public class LabelServiceTest {
             new Label(1L, "레이블1", "설명1", "#000000", "#111111", null),
                 new Label(2L, "레이블2", "설명2", "#000000", "#111111", null)
         );
+        long dummyLabelCount = 2L;
         long dummyMilestoneCount = 2L; // TODO: 추후 삭제된 마일스톤은 포함하지 않는 쿼리를 보냈고 그 결과를 받은 거이어야 함
 
         given(labelRepository.findAllLabelsNotDeleted()).willReturn(dummyLabels);
-        given(milestoneRepository.count()).willReturn(dummyMilestoneCount);
+        given(labelRepository.countByDeletedAtIsNull()).willReturn(dummyLabelCount);
+        given(milestoneRepository.countByDeletedAtIsNull()).willReturn(dummyMilestoneCount);
 
         LabelPageResponse labelPageResponse = labelService.getLabels();
 
-        assertThat(labelPageResponse.metadata().labelCount()).isEqualTo(dummyLabels.size());
+        assertThat(labelPageResponse.metadata().labelCount()).isEqualTo(dummyLabelCount);
         assertThat(labelPageResponse.metadata().milestoneCount()).isEqualTo(dummyMilestoneCount);
         assertThat(labelPageResponse.labels().getFirst().name()).isEqualTo("레이블1");
         assertThat(labelPageResponse.labels().get(1).name()).isEqualTo("레이블2");

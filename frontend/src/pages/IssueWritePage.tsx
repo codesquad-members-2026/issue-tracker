@@ -33,9 +33,9 @@ export default function IssueWritePage() {
         const fetchAllMetadata = async () => {
             try {
                 const [mRes, lRes, miRes] = await Promise.all([
-                    fetch("http://localhost:8080/api/members"),
-                    fetch("http://localhost:8080/api/labels"),
-                    fetch("http://localhost:8080/api/milestones")
+                    fetch(`${import.meta.env.VITE_API_URL}/api/members`),
+                    fetch(`${import.meta.env.VITE_API_URL}/api/labels`),
+                    fetch(`${import.meta.env.VITE_API_URL}/api/milestones`)
                 ]);
 
                 const mResult = await mRes.json();
@@ -67,7 +67,7 @@ export default function IssueWritePage() {
                 contents: contents.trim(),
                 authorId: 1,
                 assigneeIds: selectedMemberIds,
-                labelsIds: selectedLabelIds,
+                labelIds: selectedLabelIds,
                 milestoneId: selectedMilestoneId
             };
 
@@ -75,7 +75,7 @@ export default function IssueWritePage() {
             const requestBlob = new Blob([JSON.stringify(issueData)], { type: 'application/json' });
             formData.append('request', requestBlob);
 
-            const response = await fetch("http://localhost:8080/api/issues", {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/issues`, {
                 method: "POST",
                 body: formData,
             });
@@ -126,7 +126,7 @@ export default function IssueWritePage() {
                                 onChange={(e) => setContents(e.target.value)}
                             />
                             <div className="absolute bottom-4 left-4 flex items-center gap-4 text-xs font-bold text-slate-500">
-                                <button 
+                                <button
                                     type="button"
                                     onClick={triggerUpload}
                                     className="flex items-center gap-1 hover:text-slate-700 transition-colors bg-white/80 px-2 py-1 rounded border border-slate-200"
