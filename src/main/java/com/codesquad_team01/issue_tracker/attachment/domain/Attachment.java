@@ -38,6 +38,13 @@ public class Attachment {
         this.size = size;
         this.contentType = contentType;
         this.createdAt = createdAt;
+    }
 
+    public void assignId(Long issueId) {
+        this.issueId = issueId;
+    }
+
+    public void assignCommentId(Long commentId) {
+        this.commentId = commentId;
     }
 }

@@ -1,5 +1,7 @@
 package com.codesquad_team01.issue_tracker.comment.service;
 
+import com.codesquad_team01.issue_tracker.attachment.domain.Attachment;
+import com.codesquad_team01.issue_tracker.attachment.repository.AttachmentRepository;
 import com.codesquad_team01.issue_tracker.comment.domain.Comment;
 import com.codesquad_team01.issue_tracker.comment.dto.request.CommentRequest;
 import com.codesquad_team01.issue_tracker.comment.repository.CommentRepository;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -18,6 +21,7 @@ public class CommentService {
 
     private final CommentRepository commentRepository;
     private final IssueRepository issueRepository;
+    private final AttachmentRepository attachmentRepository;
 
     @Transactional
     public Long createComment(Long issueId, CommentRequest commentRequest) {
@@ -35,7 +39,18 @@ public class CommentService {
         );
 
         Comment savedComment = commentRepository.save(comment);
-        return savedComment.getId();
+        Long newCommentId = savedComment.getId();
+
+        List<Long> attachmentIds = commentRequest.attachmentIds();
+        if (attachmentIds != null && !attachmentIds.isEmpty()) {
+            List<Attachment> attachments = attachmentRepository.findAllById(attachmentIds);
+            for (Attachment attachment : attachments) {
+                attachment.assignCommentId(newCommentId);
+            }
+            attachmentRepository.saveAll(attachments);
+        }
+
+        return newCommentId;
     }
 
     @Transactional
