@@ -27,7 +27,7 @@ public class GithubOauthClient {
             @Value("${oauth.github.client-secret}") String clientSecret,
             @Value("${oauth.github.redirect-uri}") String redirectUri,
             @Value("${oauth.github.token-url}") String tokenUrl,
-            @Value("%{oauth.github.user-url}") String userUrl
+            @Value("${oauth.github.user-url}") String userUrl
     ) {
         this.clientId = clientId;
         this.clientSecret = clientSecret;
