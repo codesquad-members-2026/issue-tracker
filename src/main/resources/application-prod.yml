@@ -8,6 +8,12 @@ spring:
     init:
       mode: never
 
+oauth:
+  github:
+    client-id: ${OAUTH_CLIENT_ID}
+    client-secret: ${OAUTH_CLIENT_SECRET}
+    redirect-uri: http://team01-issue-tracker-frontend-deploy.s3-website.ap-northeast-2.amazonaws.com/login/oauth2/code/github
+
 logging:
   level:
     root: INFO
