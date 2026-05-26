@@ -1,7 +1,7 @@
 // src/pages/IssueWritePage.tsx
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import ListFilterDropdown from "../components/ListFilterDropdown.tsx";
+import ListFilterDropdown from "../components/issue/ListFilterDropdown";
 import { useImageUpload } from "../hooks/useImageUpload";
 
 // 데이터 타입 정의

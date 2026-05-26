@@ -136,11 +136,11 @@ export default function CommentItem({
                             <ReactMarkdown
                                 remarkPlugins={[remarkGfm]}
                                 components={{
-                                    img: ({node, ...props}) => <img {...props} className="max-w-full rounded-lg my-4 border border-slate-200" />,
-                                    p: ({node, ...props}) => <p {...props} className="mb-4 last:mb-0" />,
-                                    ul: ({node, ...props}) => <ul {...props} className="list-disc ml-6 mb-4" />,
-                                    ol: ({node, ...props}) => <ol {...props} className="list-decimal ml-6 mb-4" />,
-                                    a: ({node, ...props}) => <a {...props} className="text-[#007AFF] hover:underline" target="_blank" rel="noreferrer" />,
+                                    img: ({...props}) => <img {...props} className="max-w-full rounded-lg my-4 border border-slate-200" />,
+                                    p: ({...props}) => <p {...props} className="mb-4 last:mb-0" />,
+                                    ul: ({...props}) => <ul {...props} className="list-disc ml-6 mb-4" />,
+                                    ol: ({...props}) => <ol {...props} className="list-decimal ml-6 mb-4" />,
+                                    a: ({...props}) => <a {...props} className="text-[#007AFF] hover:underline" target="_blank" rel="noreferrer" />,
                                 }}
                             >
                                 {contents || "No description provided."}

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useImageUpload } from "../hooks/useImageUpload";
+import { useImageUpload } from "../../hooks/useImageUpload";
 
 interface CommentInputProps {
     onSubmit: (contents: string) => Promise<void>;
