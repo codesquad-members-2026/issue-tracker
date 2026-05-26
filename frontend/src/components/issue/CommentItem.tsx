@@ -1,9 +1,9 @@
 import { useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import type { Comment as CommentType } from "../types/Issue";
-import { getRelativeTime } from "../utils/date";
-import { useImageUpload } from "../hooks/useImageUpload";
+import type { Comment as CommentType } from "../../types/Issue";
+import { getRelativeTime } from "../../utils/date";
+import { useImageUpload } from "../../hooks/useImageUpload";
 
 interface CommentItemProps {
     comment: CommentType;
