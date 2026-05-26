@@ -1,6 +1,7 @@
 package com.codesquad_team01.issue_tracker.attachment.Service;
 
 import com.codesquad_team01.issue_tracker.attachment.domain.Attachment;
+import com.codesquad_team01.issue_tracker.attachment.dto.response.ImageUploadResponse;
 import com.codesquad_team01.issue_tracker.attachment.repository.AttachmentRepository;
 import io.awspring.cloud.s3.ObjectMetadata;
 import io.awspring.cloud.s3.S3Resource;
@@ -27,7 +28,7 @@ public class S3ImageUploadService {
     private String bucket;
 
     @Transactional
-    public String uploadImage(MultipartFile file) {
+    public ImageUploadResponse uploadImage(MultipartFile file) {
 
         if (file.isEmpty()) {
             throw new IllegalArgumentException("업로드할 파일이 비어있습니다.");
@@ -54,9 +55,9 @@ public class S3ImageUploadService {
                     LocalDateTime.now()
             );
 
-            attachmentRepository.save(attachment);
+            Attachment savedAttachment = attachmentRepository.save(attachment);
 
-            return uploadUrl;
+            return new ImageUploadResponse(savedAttachment.getId(), uploadUrl);
 
         } catch (IOException e) {
             throw new RuntimeException("S3 파일 업로드 중 오류가 발생했습니다.", e);

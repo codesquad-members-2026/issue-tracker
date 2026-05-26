@@ -17,11 +17,8 @@ public class S3ImageUploadController {
 
     @PostMapping("/api/images/upload")
     public ImageUploadResponse upload(@RequestParam("file") MultipartFile file) {
-        String uploadUrl = s3ImageUploadService.uploadImage(file);
 
-
-        return new ImageUploadResponse(uploadUrl);
-
+        return s3ImageUploadService.uploadImage(file);
     }
 
 
