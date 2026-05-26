@@ -1,6 +1,7 @@
 package com.codesquad_team01.issue_tracker.auth;
 
 import com.codesquad_team01.issue_tracker.auth.dto.request.GithubTokenRequest;
+import com.codesquad_team01.issue_tracker.auth.dto.response.GithubProfile;
 import com.codesquad_team01.issue_tracker.auth.dto.response.GithubTokenResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -51,9 +52,16 @@ public class GithubOauthClient {
                 .map(GithubTokenResponse::accessToken)
                 .orElseThrow(() -> new RuntimeException("GitHub Access Token 발급 실패"));
     }
-//
-//    public GithubProfile getUserProfile(String accessToken){
-//
-//        return null;
-//    }
+
+    public GithubProfile getUserProfile(String accessToken){
+
+        return restClient.get()
+                .uri(userUrl)
+                .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+                .retrieve()
+                .onStatus(HttpStatusCode::isError, (request, response) -> {
+                    throw new RuntimeException("GitHub 사용자 프로필 조회 실패");
+                })
+                .body(GithubProfile.class);
+    }
 }
