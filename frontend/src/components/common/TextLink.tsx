@@ -5,7 +5,7 @@ import type { LinkProps } from 'react-router-dom';
 const TextLink: React.FC<LinkProps> = ({ className = '', children, ...props }) => {
   return (
     <Link 
-      className={`text-sm font-bold text-slate-600 hover:text-slate-900 transition-colors ${className}`}
+      className={`text-sm font-bold text-slate-600 hover:text-[#007AFF] transition-colors ${className}`}
       {...props}
     >
       {children}
