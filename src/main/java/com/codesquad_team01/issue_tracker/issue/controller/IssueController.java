@@ -1,12 +1,10 @@
 package com.codesquad_team01.issue_tracker.issue.controller;
 
-import com.codesquad_team01.issue_tracker.issue.dto.request.IssueContentsRequest;
-import com.codesquad_team01.issue_tracker.issue.dto.request.IssueStatusRequest;
-import com.codesquad_team01.issue_tracker.issue.dto.request.IssueTitleUpdateRequest;
-import com.codesquad_team01.issue_tracker.issue.dto.request.IssueWriteRequest;
+import com.codesquad_team01.issue_tracker.issue.dto.request.*;
 import com.codesquad_team01.issue_tracker.global.dto.ApiResponse;
 import com.codesquad_team01.issue_tracker.issue.dto.response.IssueDetailResponse;
 import com.codesquad_team01.issue_tracker.issue.dto.response.IssueListResponse;
+import com.codesquad_team01.issue_tracker.issue.dto.response.IssueResponse;
 import com.codesquad_team01.issue_tracker.issue.service.IssueDetailService;
 import com.codesquad_team01.issue_tracker.issue.service.IssueService;
 import com.codesquad_team01.issue_tracker.issue.service.IssueWriteService;
@@ -20,6 +18,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -126,5 +125,13 @@ public class IssueController {
         issueService.assigneeUpdate(issueId, request.assigneeIds());
 
         return ApiResponse.success("이슈 담당자 수정 완료", null);
+    }
+
+    @GetMapping("/api/issues/filter")
+    public ApiResponse<IssueListResponse> filterIssueList(IssueFilterRequest issueFilterRequest) {
+
+        IssueListResponse data = issueService.getFilteredIssueList(issueFilterRequest);
+
+        return ApiResponse.success("필터링된 이슈 목록 로딩 성공",  data);
     }
 }
