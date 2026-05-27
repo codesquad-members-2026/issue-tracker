@@ -1,6 +1,9 @@
 import { useState } from "react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import type { Comment as CommentType } from "../../types/Issue";
 import { getRelativeTime } from "../../utils/date";
+import { useImageUpload } from "../../hooks/useImageUpload";
 
 interface CommentItemProps {
     comment: CommentType;
@@ -16,6 +19,8 @@ export default function CommentItem({
     const { id, author, contents, createdAt, isIssueAuthor } = comment;
     const [isEditing, setIsEditing] = useState(false);
     const [editedContents, setEditedContents] = useState(contents);
+
+    const { triggerUpload, handleFileChange, fileInputRef } = useImageUpload(editedContents, setEditedContents);
 
     const handleSave = async () => {
         if (!onSaveEdit || editedContents === contents) {
@@ -89,25 +94,57 @@ export default function CommentItem({
                                 className="w-full min-h-[200px] p-4 bg-slate-50 border border-slate-200 rounded-lg text-base focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#007AFF]/20 transition-all resize-none"
                                 placeholder="코멘트를 입력하세요"
                             />
-                            <div className="flex justify-end gap-2">
-                                <button
-                                    onClick={handleCancel}
-                                    className="px-4 py-2 text-sm font-bold text-slate-600 hover:bg-slate-100 rounded-lg transition-colors"
-                                >
-                                    편집 취소
-                                </button>
-                                <button
-                                    onClick={handleSave}
-                                    disabled={!isMainContent && !editedContents.trim()}
-                                    className="px-4 py-2 text-sm font-bold text-white bg-[#007AFF] hover:bg-[#0062CC] disabled:bg-slate-300 rounded-lg transition-colors"
-                                >
-                                    편집 완료
-                                </button>
+                            <div className="flex justify-between items-center">
+                                <div className="flex items-center gap-4 text-xs font-bold text-slate-500">
+                                    <button
+                                        type="button"
+                                        onClick={triggerUpload}
+                                        className="flex items-center gap-1 hover:text-slate-700 transition-colors"
+                                    >
+                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.414a4 4 0 00-5.656-5.656l-6.415 6.414a6 6 0 108.486 8.486L20.5 13" />
+                                        </svg>
+                                        파일 첨부
+                                    </button>
+                                    <input
+                                        type="file"
+                                        ref={fileInputRef}
+                                        onChange={handleFileChange}
+                                        className="hidden"
+                                        accept="image/*"
+                                    />
+                                </div>
+                                <div className="flex gap-2">
+                                    <button
+                                        onClick={handleCancel}
+                                        className="px-4 py-2 text-sm font-bold text-slate-600 hover:bg-slate-100 rounded-lg transition-colors"
+                                    >
+                                        편집 취소
+                                    </button>
+                                    <button
+                                        onClick={handleSave}
+                                        disabled={!isMainContent && !editedContents.trim()}
+                                        className="px-4 py-2 text-sm font-bold text-white bg-[#007AFF] hover:bg-[#0062CC] disabled:bg-slate-300 rounded-lg transition-colors"
+                                    >
+                                        편집 완료
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     ) : (
-                        <div className={`leading-relaxed whitespace-pre-wrap ${isMainContent ? 'text-lg' : 'text-base'} ${!contents ? 'text-slate-400 italic' : 'text-[#4E4B66]'}`}>
-                            {contents || "No description provided."}
+                        <div className={`prose prose-slate max-w-none leading-relaxed ${isMainContent ? 'text-lg' : 'text-base'} ${!contents ? 'text-slate-400 italic' : 'text-[#4E4B66]'}`}>
+                            <ReactMarkdown
+                                remarkPlugins={[remarkGfm]}
+                                components={{
+                                    img: ({...props}) => <img {...props} className="max-w-full rounded-lg my-4 border border-slate-200" />,
+                                    p: ({...props}) => <p {...props} className="mb-4 last:mb-0" />,
+                                    ul: ({...props}) => <ul {...props} className="list-disc ml-6 mb-4" />,
+                                    ol: ({...props}) => <ol {...props} className="list-decimal ml-6 mb-4" />,
+                                    a: ({...props}) => <a {...props} className="text-[#007AFF] hover:underline" target="_blank" rel="noreferrer" />,
+                                }}
+                            >
+                                {contents || "No description provided."}
+                            </ReactMarkdown>
                         </div>
                     )}
                 </div>

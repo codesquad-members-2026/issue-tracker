@@ -1,5 +1,7 @@
 package com.codesquad_team01.issue_tracker.issue.service;
 
+import com.codesquad_team01.issue_tracker.attachment.domain.Attachment;
+import com.codesquad_team01.issue_tracker.attachment.repository.AttachmentRepository;
 import com.codesquad_team01.issue_tracker.issue.domain.Assignee;
 import com.codesquad_team01.issue_tracker.issue.domain.Issue;
 import com.codesquad_team01.issue_tracker.issue.domain.IssueLabel;
@@ -19,6 +21,7 @@ import java.util.stream.Collectors;
 public class IssueWriteService {
 
     private final IssueRepository issueRepository;
+    private final AttachmentRepository attachmentRepository;
 
     @Transactional
     public Long writeIssue(IssueWriteRequest issueWriteRequest, List<MultipartFile> files) {
@@ -41,6 +44,17 @@ public class IssueWriteService {
         );
 
         Issue savedIssue = issueRepository.save(issue);
-        return savedIssue.getId();
-    }
-}
+        Long newIssueId = savedIssue.getId();
+
+        List<Long> attachmentIds = issueWriteRequest.attachmentIds();
+        if (attachmentIds != null && !attachmentIds.isEmpty()) {
+            List<Attachment> attachments = attachmentRepository.findAllById(attachmentIds);
+            for (Attachment attachment : attachments) {
+                attachment.assignId(newIssueId);
+            }
+            attachmentRepository.saveAll(attachments);
+        }
+
+        return newIssueId;
+        }
+        }

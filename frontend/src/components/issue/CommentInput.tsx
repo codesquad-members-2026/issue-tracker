@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useImageUpload } from "../../hooks/useImageUpload";
 
 interface CommentInputProps {
     onSubmit: (contents: string) => Promise<void>;
@@ -7,6 +8,8 @@ interface CommentInputProps {
 export default function CommentInput({ onSubmit }: CommentInputProps) {
     const [contents, setContents] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const { triggerUpload, handleFileChange, fileInputRef } = useImageUpload(contents, setContents);
 
     const handleSubmit = async () => {
         if (!contents.trim()) return;
@@ -50,12 +53,23 @@ export default function CommentInput({ onSubmit }: CommentInputProps) {
                 {/* Footer / Actions */}
                 <div className="flex justify-between items-center px-4 py-3 border-t border-slate-100">
                     <div className="flex items-center gap-4 text-xs font-bold text-slate-500">
-                        <button className="flex items-center gap-1 hover:text-slate-700 transition-colors">
+                        <button 
+                            type="button"
+                            onClick={triggerUpload}
+                            className="flex items-center gap-1 hover:text-slate-700 transition-colors"
+                        >
                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.414a4 4 0 00-5.656-5.656l-6.415 6.414a6 6 0 108.486 8.486L20.5 13" />
                             </svg>
                             파일 첨부
                         </button>
+                        <input
+                            type="file"
+                            ref={fileInputRef}
+                            onChange={handleFileChange}
+                            className="hidden"
+                            accept="image/*"
+                        />
                     </div>
                     
                     <button
@@ -74,3 +88,4 @@ export default function CommentInput({ onSubmit }: CommentInputProps) {
         </div>
     );
 }
+

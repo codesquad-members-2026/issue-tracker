@@ -29,6 +29,7 @@ dependencies {
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 	testAnnotationProcessor 'org.projectlombok:lombok'
     testImplementation("com.h2database:h2:2.4.240")
+	implementation 'io.awspring.cloud:spring-cloud-aws-starter-s3:3.1.1'
 }
 
 tasks.named('test') {

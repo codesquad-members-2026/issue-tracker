@@ -10,12 +10,14 @@ public record IssueWriteRequest(
 
         List<Long> assigneeIds,
         List<Long> labelIds,
-        Long milestoneId
+        Long milestoneId,
+        List<Long> attachmentIds
 ) {
 
     public IssueWriteRequest {
 
         assigneeIds = assigneeIds != null ? assigneeIds : List.of();
         labelIds = labelIds != null ? labelIds : List.of();
+        attachmentIds = attachmentIds != null ? attachmentIds : List.of();
     }
 }
