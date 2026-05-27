@@ -1,43 +1,45 @@
 // src/App.tsx
-import { BrowserRouter, Routes, Route } from 'react-router-dom'; // 라우터 컴포넌트 임포트
+import { BrowserRouter, Routes, Route, Outlet } from 'react-router-dom';
 import Header from './components/Header.tsx';
 import IssueListPage from './pages/IssueListPage.tsx';
-import IssueWritePage from './pages/IssueWritePage.tsx'; // 작성 페이지 임포트
+import IssueWritePage from './pages/IssueWritePage.tsx';
 import IssueDetailPage from './pages/IssueDetailPage.tsx';
 import LabelPage from './pages/LabelPage.tsx';
 import MilestonePage from './pages/MilestonePage.tsx';
+import LoginPage from './pages/LoginPage.tsx';
 
-// 테스트 주석
+// 헤더를 포함하는 공통 레이아웃 컴포넌트
+const MainLayout = () => {
+    return (
+        <>
+            <div className="w-full pt-4">
+                <Header />
+            </div>
+            <Outlet /> {/* 이 자리에 아래의 하위 라우트들이 갈아끼워집니다. */}
+        </>
+    );
+};
+
 function App() {
     return (
-        <BrowserRouter> {/* 브라우저 라우터로 전체를 감쌉니다 */}
+        <BrowserRouter>
             <div className="min-h-screen bg-slate-100 font-sans">
-                <div className={"w-full pt-4"}>
-                    <Header />
-                </div>
-
                 <Routes>
-                    {/* 메인 목록 페이지 */}
-                    <Route path="/" element={<IssueListPage />} />
+                    {/* 로그인 페이지는 헤더가 필요 없으므로 MainLayout 밖에 둡니다. */}
+                    <Route path="/login" element={<LoginPage />} />
 
-                    {/* 이슈 작성 페이지 */}
-                    <Route path="/issues/new" element={<IssueWritePage />} />
-
-                    {/* 이슈 상세 페이지 */}
-                    <Route path="/issues/:id" element={<IssueDetailPage />} />
-
-                    {/* 레이블 목록 페이지 */}
-                    <Route path="/labels" element={<LabelPage />} />
-
-                    {/* 마일스톤 목록 페이지 */}
-                    <Route path="/milestones" element={<MilestonePage />} />
+                    {/* 메인 영역: 아래의 모든 페이지는 MainLayout(헤더 포함) 안에서 보입니다. */}
+                    <Route element={<MainLayout />}>
+                        <Route path="/" element={<IssueListPage />} />
+                        <Route path="/issues/new" element={<IssueWritePage />} />
+                        <Route path="/issues/:id" element={<IssueDetailPage />} />
+                        <Route path="/labels" element={<LabelPage />} />
+                        <Route path="/milestones" element={<MilestonePage />} />
+                    </Route>
                 </Routes>
             </div>
         </BrowserRouter>
     );
 }
-
-
-
 
 export default App;
