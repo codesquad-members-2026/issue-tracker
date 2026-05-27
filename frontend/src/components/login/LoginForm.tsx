@@ -5,20 +5,21 @@ import Button from '../common/Button';
 
 interface LoginFormProps {
   onSubmit: (id: string, pw: string) => void;
+  isLoading?: boolean;
 }
 
-const LoginForm: FC<LoginFormProps> = ({ onSubmit }) => {
+const LoginForm: FC<LoginFormProps> = ({ onSubmit, isLoading = false }) => {
   const [id, setId] = useState('');
   const [pw, setPw] = useState('');
 
   const handleSubmit = (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (id && pw) {
+    if (isFormValid) {
       onSubmit(id, pw);
     }
   };
 
-  const isFormValid = id.length > 0 && pw.length > 0;
+  const isFormValid = id.length > 0 && pw.length > 0 && !isLoading;
 
   return (
     <form onSubmit={handleSubmit} className="w-full flex flex-col gap-4">
@@ -39,7 +40,7 @@ const LoginForm: FC<LoginFormProps> = ({ onSubmit }) => {
         disabled={!isFormValid}
         className="mt-2"
       >
-        아이디로 로그인
+        {isLoading ? '로그인 중...' : '아이디로 로그인'}
       </Button>
     </form>
   );

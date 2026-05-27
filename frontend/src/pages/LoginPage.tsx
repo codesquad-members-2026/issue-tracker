@@ -1,4 +1,6 @@
+import { useState } from 'react';
 import type { FC } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Title from '../components/common/Title';
 import Button from '../components/common/Button';
 import Divider from '../components/common/Divider';
@@ -6,6 +8,9 @@ import LoginForm from '../components/login/LoginForm';
 import TextLink from '../components/common/TextLink';
 
 const LoginPage: FC = () => {
+    const navigate = useNavigate();
+    const [isLoading, setIsLoading] = useState(false);
+
     const handleGithubLogin = () => {
         const clientId = import.meta.env.VITE_GITHUB_CLIENT_ID;
         const redirectUri = import.meta.env.VITE_GITHUB_REDIRECT_URI;
@@ -15,9 +20,32 @@ const LoginPage: FC = () => {
         window.location.href = githubAuthUrl;
     };
 
-    const handleLocalLogin = (id: string, pw: string) => {
-        console.log('Local login attempt:', { id, pw });
-        alert('로컬 로그인은 아직 준비 중입니다. 깃허브 로그인을 이용해 주세요!');
+    const handleLocalLogin = async (id: string, pw: string) => {
+        setIsLoading(true);
+        try {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/login`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ userId: id, password: pw }),
+            });
+
+            const result = await response.json();
+
+            if (response.ok && result.success) {
+                const token = result.data.token.accessToken;
+                localStorage.setItem('accessToken', token);
+                navigate('/', { replace: true });
+            } else {
+                alert(result.message || '아이디 또는 비밀번호를 확인해주세요.');
+            }
+        } catch (error) {
+            console.error('로그인 에러:', error);
+            alert('서버와 통신 중 문제가 발생했습니다.');
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (
@@ -37,7 +65,7 @@ const LoginPage: FC = () => {
                     <Divider text="or" />
 
                     {/* 로컬 로그인 영역 */}
-                    <LoginForm onSubmit={handleLocalLogin} />
+                    <LoginForm onSubmit={handleLocalLogin} isLoading={isLoading} />
 
                     <TextLink to="/signup" className="mx-auto mt-2">
                         회원가입
