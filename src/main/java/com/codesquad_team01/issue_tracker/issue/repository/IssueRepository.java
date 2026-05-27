@@ -10,7 +10,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
-public interface IssueRepository extends ListCrudRepository<Issue, Long> {
+public interface IssueRepository extends ListCrudRepository<Issue, Long>, IssueRepositoryCustom {
 
     @Query("SELECT * FROM issue WHERE id = :id AND deleted_at IS NULL")
     Optional<Issue> findActiveById(@Param("id") Long id);
