@@ -7,6 +7,7 @@ import IssueDetailPage from './pages/IssueDetailPage.tsx';
 import LabelPage from './pages/LabelPage.tsx';
 import MilestonePage from './pages/MilestonePage.tsx';
 import LoginPage from './pages/LoginPage.tsx';
+import AuthCallbackPage from './pages/AuthCallbackPage.tsx';
 
 // 헤더를 포함하는 공통 레이아웃 컴포넌트
 const MainLayout = () => {
@@ -27,6 +28,9 @@ function App() {
                 <Routes>
                     {/* 로그인 페이지는 헤더가 필요 없으므로 MainLayout 밖에 둡니다. */}
                     <Route path="/login" element={<LoginPage />} />
+                    
+                    {/* 깃허브 로그인 콜백 페이지 (환경 변수의 리다이렉트 경로와 맞춤) */}
+                    <Route path="/login/oauth2/code/github" element={<AuthCallbackPage />} />
 
                     {/* 메인 영역: 아래의 모든 페이지는 MainLayout(헤더 포함) 안에서 보입니다. */}
                     <Route element={<MainLayout />}>
