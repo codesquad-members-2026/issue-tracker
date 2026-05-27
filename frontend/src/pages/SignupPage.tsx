@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import type { FC } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Title from '../components/common/Title';
@@ -8,6 +8,14 @@ import TextLink from '../components/common/TextLink';
 const SignupPage: FC = () => {
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(false);
+
+    // 이미 로그인된 상태(토큰 존재)라면 메인 페이지로 쫓아내기
+    useEffect(() => {
+        const token = localStorage.getItem('accessToken');
+        if (token) {
+            navigate('/', { replace: true });
+        }
+    }, [navigate]);
 
     const handleSignup = async (userId: string, password: string, name: string, email: string) => {
         setIsLoading(true);
