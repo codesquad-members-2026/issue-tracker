@@ -7,6 +7,7 @@ import IssueListHeader from "../components/issue/IssueListHeader.tsx";
 import IssueItem, {type IssueType} from "../components/issue/IssueItem.tsx";
 import IssueSelectionHeader from "../components/issue/IssueSelectionHeader.tsx";
 import type { IssueResponse } from "../types/Issue";
+import { fetchWithAuth } from "../utils/api.ts";
 
 export default function IssueListPage() {
     const [issues, setIssues] = useState<IssueType[]>([]);
@@ -27,7 +28,7 @@ export default function IssueListPage() {
         const fetchIssues = async () => {
             try {
                 setIsLoading(true);
-                const response = await fetch(`${import.meta.env.VITE_API_URL}/api/issues?status=${status}`);
+                const response = await fetchWithAuth(`${import.meta.env.VITE_API_URL}/api/issues?status=${status}`);
                 const result: IssueResponse = await response.json();
 
                 if(result.success){
