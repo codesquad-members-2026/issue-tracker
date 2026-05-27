@@ -13,10 +13,14 @@ SET FOREIGN_KEY_CHECKS = 1;
 -- 1. 회원 정보
 CREATE TABLE `member` (
                            `id` bigint PRIMARY KEY AUTO_INCREMENT,
+
                            `user_id` varchar(50) UNIQUE NOT NULL,
-                           `name` varchar(50) NOT NULL,
-                           `password` varchar(255) NOT NULL,
-                           `email` varchar(255) NOT NULL,
+                           `name` varchar(50) NULL,
+                           `email` varchar(255) NULL,
+
+                           `password` varchar(255) NULL,
+                           `oauth_id` bigint UNIQUE,
+
                            `deleted_at` datetime DEFAULT NULL -- 기본값 NULL로 수정
 );
 

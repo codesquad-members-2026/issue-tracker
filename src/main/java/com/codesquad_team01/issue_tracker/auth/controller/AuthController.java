@@ -1,6 +1,7 @@
 package com.codesquad_team01.issue_tracker.auth.controller;
 
 import com.codesquad_team01.issue_tracker.auth.dto.request.LoginRequest;
+import com.codesquad_team01.issue_tracker.auth.dto.response.GithubLoginResponse;
 import com.codesquad_team01.issue_tracker.auth.service.AuthService;
 import com.codesquad_team01.issue_tracker.global.dto.ApiResponse;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,9 +20,9 @@ public class AuthController {
     }
 
     @PostMapping("/login/github")
-    public ApiResponse<String> login (@RequestBody LoginRequest loginRequest){
+    public ApiResponse<GithubLoginResponse> login (@RequestBody LoginRequest loginRequest){
         String code = loginRequest.code();
-        String accessToken = authService.login(code);
-        return ApiResponse.success(accessToken);
+        GithubLoginResponse githubLoginResponse = authService.login(code);
+        return ApiResponse.success("로그인 성공", githubLoginResponse);
     }
 }
