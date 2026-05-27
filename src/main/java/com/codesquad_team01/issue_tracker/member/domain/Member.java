@@ -15,15 +15,20 @@ public class Member {
     private String name;
     private String password;
     private String email;
+    private Long oauthId;
     private LocalDateTime deletedAt;
 
-    public Member(Long id, String userId, String name, String password, String email, LocalDateTime deletedAt) {
+    public Member(Long id, String userId, String name, String password, String email, Long oauthId, LocalDateTime deletedAt) {
         this.id = id;
         this.userId = userId;
         this.name = name;
         this.password = password;
         this.email = email;
+        this.oauthId = oauthId;
         this.deletedAt = deletedAt;
     }
 
+    public void restore(){
+        this.deletedAt = null;
+    }
 }
