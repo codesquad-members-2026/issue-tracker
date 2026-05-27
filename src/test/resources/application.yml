@@ -4,3 +4,13 @@ spring:
       mode: embedded
       schema-locations: classpath:schema.sql
       data-locations: classpath:empty-data.sql
+
+  cloud:
+    aws:
+      credentials:
+        access-key: test
+        secret-key: test
+      region:
+        static: ap-northeast-2
+      s3:
+        bucket: test-bucket
