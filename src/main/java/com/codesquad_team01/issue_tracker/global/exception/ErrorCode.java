@@ -10,15 +10,11 @@ public enum ErrorCode {
     NOT_FOUND_TOKEN(HttpStatus.UNAUTHORIZED, "토큰이 존재하지 않습니다."),
     INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "유효하지 않은 토큰입니다.");
 
-    private final HttpStatus status;
+    private final HttpStatus httpStatus;
     private final String message;
 
-    ErrorCode(HttpStatus status, String message) {
-        this.status = status;
+    ErrorCode(HttpStatus httpStatus, String message) {
+        this.httpStatus = httpStatus;
         this.message = message;
-    }
-
-    public HttpStatus getHttpStatus() {
-        return status;
     }
 }

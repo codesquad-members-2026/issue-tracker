@@ -13,9 +13,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(IssueTrackerException.class)
     public ResponseEntity<ApiResponse<Void>> handleIssueTrackerException(IssueTrackerException e) {
         ErrorCode errorCode = e.getErrorCode();
-        HttpStatus status = errorCode.getHttpStatus();
-
-        return ResponseEntity.status(status)
+        
+        return ResponseEntity.status(errorCode.getHttpStatus())
                 .body(ApiResponse.fail(errorCode.getMessage(), errorCode.name()));
     }
 
