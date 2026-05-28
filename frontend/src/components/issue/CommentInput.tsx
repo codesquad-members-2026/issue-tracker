@@ -9,6 +9,10 @@ export default function CommentInput({ onSubmit }: CommentInputProps) {
     const [contents, setContents] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
 
+    const storedUser = localStorage.getItem('user');
+    const user = storedUser ? JSON.parse(storedUser) : null;
+    const userId = user?.userId || 'unknown';
+
     const { triggerUpload, handleFileChange, fileInputRef } = useImageUpload(contents, setContents);
 
     const handleSubmit = async () => {
@@ -29,9 +33,12 @@ export default function CommentInput({ onSubmit }: CommentInputProps) {
         <div className="flex gap-4 mb-8">
             {/* User Avatar */}
             <img
-                src="https://avatars.githubusercontent.com/u/9919?s=44&v=4"
+                src={`https://avatars.githubusercontent.com/${userId}?s=44&v=4`}
                 alt="Current User"
                 className="w-11 h-11 rounded-full border border-slate-200 object-cover"
+                onError={(e) => {
+                    (e.target as HTMLImageElement).src = 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y';
+                }}
             />
 
             {/* Input Box */}

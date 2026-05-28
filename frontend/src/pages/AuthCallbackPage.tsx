@@ -34,9 +34,12 @@ export default function AuthCallbackPage() {
                 const result = await response.json();
 
                 if (result.success) {
-                    // 백엔드 응답 구조: result.data.token.accessToken
+                    // 백엔드 응답 구조: result.data.token.accessToken, result.data.userLoginResponse
                     const token = result.data.token.accessToken;
+                    const user = result.data.userLoginResponse;
+                    
                     localStorage.setItem('accessToken', token);
+                    localStorage.setItem('user', JSON.stringify(user));
                     
                     // 로그인 성공 후 메인 페이지로 이동
                     navigate('/', { replace: true });
