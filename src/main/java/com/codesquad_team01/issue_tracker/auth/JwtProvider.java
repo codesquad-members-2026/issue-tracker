@@ -13,20 +13,35 @@ import java.util.Date;
 @Component
 public class JwtProvider {
     private final SecretKey secretKey;
-    private final long expirationTime;
+    private final long accessExpirationTime;
+    private final long refreshExpirationTime;
 
     public JwtProvider(
             @Value("${jwt.secret}") String secret,
-            @Value("${jwt.access-token-expiration}") long expirationTime
+            @Value("${jwt.access-token-expiration}") long accessExpirationTime,
+            @Value("${jwt.refresh-token-expiration}") long refreshExpirationTime
     ) {
 
         this.secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
-        this.expirationTime = expirationTime;
+        this.accessExpirationTime = accessExpirationTime;
+        this.refreshExpirationTime = refreshExpirationTime;
     }
 
     public String createAccessToken(Long memberId){
         Date now = new Date();
-        Date validity = new Date(now.getTime() + expirationTime);
+        Date validity = new Date(now.getTime() + accessExpirationTime);
+
+        return Jwts.builder()
+                .subject(String.valueOf(memberId))
+                .issuedAt(now)
+                .expiration(validity)
+                .signWith(secretKey)
+                .compact();
+    }
+
+    public String createRefreshToken(Long memberId){
+        Date now = new Date();
+        Date validity = new Date(now.getTime() + refreshExpirationTime);
 
         return Jwts.builder()
                 .subject(String.valueOf(memberId))

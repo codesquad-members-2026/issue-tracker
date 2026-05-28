@@ -92,6 +92,14 @@ CREATE TABLE `issue_label` (
                                 `label_id` bigint NOT NULL
 );
 
+-- 9. 리프레쉬 토큰
+CREATE TABLE `refresh_token`(
+    `id` bigint PRIMARY KEY AUTO_INCREMENT,
+    `member_id` bigint NOT NULL,
+    `token` varchar(512) NOT NULL,
+    `created_at` datetime DEFAULT CURRENT_TIMESTAMP
+)
+
 -- 유니크 인덱스 (중복 할당 방지)
 CREATE UNIQUE INDEX `assignee_index_0` ON `assignee` (`issue_id`, `member_id`);
 CREATE UNIQUE INDEX `issue_label_index_1` ON `issue_label` (`issue_id`, `label_id`);
@@ -107,3 +115,4 @@ ALTER TABLE `assignee` ADD FOREIGN KEY (`issue_id`) REFERENCES `issue` (`id`) ON
 ALTER TABLE `assignee` ADD FOREIGN KEY (`member_id`) REFERENCES `member` (`id`);
 ALTER TABLE `issue_label` ADD FOREIGN KEY (`issue_id`) REFERENCES `issue` (`id`) ON DELETE CASCADE;
 ALTER TABLE `issue_label` ADD FOREIGN KEY (`label_id`) REFERENCES `label` (`id`);
+ALTER TABLE `refresh_token` ADD FOREIGN KEY (`member_id`) REFERENCES `member` (`id`) ON DELETE CASCADE;
