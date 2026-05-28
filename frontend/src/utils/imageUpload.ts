@@ -1,8 +1,10 @@
+import { fetchWithAuth } from "./api.ts";
+
 export const uploadImage = async (file: File): Promise<string> => {
     const formData = new FormData();
     formData.append("file", file);
 
-    const response = await fetch("http://localhost:8080/api/images/upload", {
+    const response = await fetchWithAuth(`${import.meta.env.VITE_API_URL}/api/images/upload`, {
         method: "POST",
         body: formData,
     });

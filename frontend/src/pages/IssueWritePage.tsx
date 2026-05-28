@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import ListFilterDropdown from "../components/issue/ListFilterDropdown";
 import { useImageUpload } from "../hooks/useImageUpload";
+import { fetchWithAuth } from "../utils/api.ts";
 
 // 데이터 타입 정의
 interface Member { id: number; name: string; }
@@ -33,9 +34,9 @@ export default function IssueWritePage() {
         const fetchAllMetadata = async () => {
             try {
                 const [mRes, lRes, miRes] = await Promise.all([
-                    fetch(`${import.meta.env.VITE_API_URL}/api/members`),
-                    fetch(`${import.meta.env.VITE_API_URL}/api/labels`),
-                    fetch(`${import.meta.env.VITE_API_URL}/api/milestones`)
+                    fetchWithAuth(`${import.meta.env.VITE_API_URL}/api/members`),
+                    fetchWithAuth(`${import.meta.env.VITE_API_URL}/api/labels`),
+                    fetchWithAuth(`${import.meta.env.VITE_API_URL}/api/milestones`)
                 ]);
 
                 const mResult = await mRes.json();
@@ -75,7 +76,7 @@ export default function IssueWritePage() {
             const requestBlob = new Blob([JSON.stringify(issueData)], { type: 'application/json' });
             formData.append('request', requestBlob);
 
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/issues`, {
+            const response = await fetchWithAuth(`${import.meta.env.VITE_API_URL}/api/issues`, {
                 method: "POST",
                 body: formData,
             });
