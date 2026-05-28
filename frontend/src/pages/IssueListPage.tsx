@@ -169,7 +169,7 @@ export default function IssueListPage() {
         };
 
         void fetchIssues();
-    }, [tokens, metadata, isMetadataLoaded]);
+    }, [resolvedTokens, metadata, isMetadataLoaded, q, setSearchParams, tokens]);
 
     const handleSearchSubmit = (newQ: string) => {
         setSearchParams({ q: newQ });

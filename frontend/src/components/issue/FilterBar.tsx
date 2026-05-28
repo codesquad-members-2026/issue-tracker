@@ -1,7 +1,7 @@
 // src/components/FilterBar.tsx
 // import { useState, KeyboardEvent } from 'react';
 
-import { useState, useEffect, type KeyboardEvent } from 'react';
+import { useState, type KeyboardEvent } from 'react';
 
 interface FilterBarProps {
     initialSearchText: string;
@@ -21,19 +21,20 @@ export default function FilterBar({ initialSearchText, onSearchSubmit }: FilterB
 
     // 1. 검색바 입력값을 관리할 상태 추가 (props와 동기화)
     const [searchText, setSearchText] = useState(initialSearchText);
-    const [selectedFilter, setSelectedFilter] = useState('열린 이슈');
-
-    useEffect(() => {
-        setSearchText(initialSearchText);
-        
-        // 검색어와 일치하는 필터 옵션 찾기
+    const [prevInitialSearchText, setPrevInitialSearchText] = useState(initialSearchText);
+    const [selectedFilter, setSelectedFilter] = useState(() => {
         const matchingOption = FILTER_OPTIONS.find(opt => opt.query === initialSearchText);
-        if (matchingOption) {
-            setSelectedFilter(matchingOption.label);
-        } else {
-            setSelectedFilter(''); // 커스텀 검색어인 경우 선택 해제
-        }
-    }, [initialSearchText]);
+        return matchingOption ? matchingOption.label : '';
+    });
+
+    // props가 변경되었을 때 상태 동기화 (render phase에서 수행)
+    if (initialSearchText !== prevInitialSearchText) {
+        setSearchText(initialSearchText);
+        setPrevInitialSearchText(initialSearchText);
+        
+        const matchingOption = FILTER_OPTIONS.find(opt => opt.query === initialSearchText);
+        setSelectedFilter(matchingOption ? matchingOption.label : '');
+    }
 
     const togglePopup = () => setIsPopupOpen(!isPopupOpen);
     const closePopup = () => setIsPopupOpen(false);
