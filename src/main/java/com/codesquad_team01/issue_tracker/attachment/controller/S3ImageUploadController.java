@@ -1,7 +1,7 @@
-package com.codesquad_team01.issue_tracker.attachment.Controller;
+package com.codesquad_team01.issue_tracker.attachment.controller;
 
 
-import com.codesquad_team01.issue_tracker.attachment.Service.S3ImageUploadService;
+import com.codesquad_team01.issue_tracker.attachment.service.S3ImageUploadService;
 import com.codesquad_team01.issue_tracker.attachment.dto.response.ImageUploadResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;

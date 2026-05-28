@@ -1,4 +1,4 @@
-package com.codesquad_team01.issue_tracker.attachment.Service;
+package com.codesquad_team01.issue_tracker.attachment.service;
 
 import com.codesquad_team01.issue_tracker.attachment.domain.Attachment;
 import com.codesquad_team01.issue_tracker.attachment.dto.response.ImageUploadResponse;
