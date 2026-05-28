@@ -1,5 +1,6 @@
 package com.codesquad_team01.issue_tracker.issue.controller;
 
+import com.codesquad_team01.issue_tracker.auth.Login;
 import com.codesquad_team01.issue_tracker.issue.dto.request.*;
 import com.codesquad_team01.issue_tracker.global.dto.ApiResponse;
 import com.codesquad_team01.issue_tracker.issue.dto.response.IssueDetailResponse;
@@ -48,12 +49,13 @@ public class IssueController {
 
     @PostMapping(value = "/api/issues", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ApiResponse<Map<String, Long>> uploadIssue(
+            @Login Long memberId,
             @RequestPart("request") @Valid IssueWriteRequest issueWriteRequest,
             @RequestPart(value = "files", required = false) List<MultipartFile> files) {
 
-        Long issueId = issueWriteService.writeIssue(issueWriteRequest,files);
+        Long issueId = issueWriteService.writeIssue(issueWriteRequest, files, memberId);
 
-        return ApiResponse.success("이슈 작성 완료",Map.of("issueId", issueId));
+        return ApiResponse.success("이슈 작성 완료", Map.of("issueId", issueId));
     }
 
     @GetMapping("/api/issues/{issueId}")
