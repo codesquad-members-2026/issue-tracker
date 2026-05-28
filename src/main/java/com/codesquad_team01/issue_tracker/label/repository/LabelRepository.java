@@ -1,7 +1,6 @@
 package com.codesquad_team01.issue_tracker.label.repository;
 
 import com.codesquad_team01.issue_tracker.label.domain.Label;
-import com.codesquad_team01.issue_tracker.label.dto.response.LabelMetaData;
 import org.springframework.data.jdbc.repository.query.Query;
 import org.springframework.data.repository.ListCrudRepository;
 import org.springframework.data.repository.query.Param;

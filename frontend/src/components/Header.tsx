@@ -38,24 +38,32 @@ export default function Header() {
                 </h1>
             </Link>
 
-            {/* 3. 프로필 이미지 & 로그아웃 영역 */}
-            <div className="flex items-center gap-4">
+            {/* 3. 프로필 이미지 & 유저 정보 & 로그아웃 영역 */}
+            <div className="flex items-center gap-6">
+                {/* 유저 정보 뱃지 */}
+                <div className="flex items-center gap-3 bg-white pl-2 pr-4 py-1.5 rounded-full border border-slate-200 shadow-sm transition-all hover:shadow-md hover:border-slate-300">
+                    <div className="w-8 h-8 rounded-full bg-slate-100 border border-slate-200 overflow-hidden shrink-0">
+                        <img
+                            src={`https://avatars.githubusercontent.com/${userId}?s=40&v=4`}
+                            alt={`${userId} Profile`}
+                            className="w-full h-full object-cover"
+                            onError={(e) => {
+                                (e.target as HTMLImageElement).src = 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y';
+                            }}
+                        />
+                    </div>
+                    <span className="text-sm font-medium text-slate-700 truncate max-w-[120px]">
+                        {userId}
+                    </span>
+                </div>
+
+                {/* 로그아웃 버튼 */}
                 <button
                     onClick={handleLogout}
-                    className="text-sm font-bold text-slate-500 hover:text-slate-900 transition-colors"
+                    className="text-sm font-medium text-slate-500 hover:text-red-500 transition-colors"
                 >
                     로그아웃
                 </button>
-                <div className="w-8 h-8 rounded-full bg-slate-300 border border-slate-200 overflow-hidden cursor-pointer hover:ring-2 hover:ring-blue-500 transition-all">
-                    <img
-                        src={`https://avatars.githubusercontent.com/${userId}?s=40&v=4`}
-                        alt="User Profile"
-                        className="w-full h-full object-cover"
-                        onError={(e) => {
-                            (e.target as HTMLImageElement).src = 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y';
-                        }}
-                    />
-                </div>
             </div>
         </header>
     );
