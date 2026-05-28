@@ -45,7 +45,11 @@ const LoginPage: FC = () => {
 
             if (response.ok && result.success) {
                 const token = result.data.token.accessToken;
+                const user = result.data.userLoginResponse;
+                
                 localStorage.setItem('accessToken', token);
+                localStorage.setItem('user', JSON.stringify(user));
+                
                 navigate('/', { replace: true });
             } else {
                 toast.error(result.message || '아이디 또는 비밀번호를 확인해주세요.');

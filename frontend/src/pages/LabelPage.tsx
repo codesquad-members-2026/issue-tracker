@@ -6,26 +6,7 @@ import LabelList from "../components/label/LabelList";
 import LabelItem from "../components/label/LabelItem";
 import LabelForm from "../components/label/LabelForm";
 import { fetchWithAuth } from "../utils/api";
-
-// --- Types ---
-interface Label {
-    id: number;
-    name: string;
-    description: string;
-    textColor: string;
-    backgroundColor: string;
-}
-
-interface LabelPageResponse {
-    success: boolean;
-    data: {
-        metadata: {
-            labelCount: number;
-            milestoneCount: number;
-        };
-        labels: Label[];
-    };
-}
+import type { Label, LabelPageResponse } from "../types/Issue";
 
 export default function LabelPage() {
     const [labels, setLabels] = useState<Label[]>([]);
@@ -73,7 +54,7 @@ export default function LabelPage() {
         }
     };
 
-    const handleSave = async (data: { name: string; description: string; backgroundColor: string; textColor: string }) => {
+    const handleSave = async (data: { name: string; description?: string; backgroundColor: string; textColor: string }) => {
         const isEdit = !!editingLabelId;
         const url = isEdit ? `${import.meta.env.VITE_API_URL}/api/labels/${editingLabelId}` : `${import.meta.env.VITE_API_URL}/api/labels`;
         const method = isEdit ? "PATCH" : "POST";

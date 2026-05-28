@@ -1,7 +1,7 @@
 // src/components/LabelDescription.tsx
 
 interface LabelDescriptionProps {
-    description: string;
+    description?: string;
 }
 
 export default function LabelDescription({ description }: LabelDescriptionProps) {

@@ -13,15 +13,13 @@ import java.util.Map;
 @Component
 public class CommentDtoMapper {
 
-    public CommentResponse toCommentResponse(Long commentId, String contents) {
-        AuthorResponse authorResponse = new AuthorResponse(1L, "완자");
-
+    public CommentResponse toCommentResponse(Long commentId, String contents, AuthorResponse authorResponse, boolean isIssueAuthor) {
         return new CommentResponse(
                 commentId,
                 authorResponse,
                 contents,
                 LocalDateTime.now(),
-                true
+                isIssueAuthor
         );
     }
 

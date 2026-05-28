@@ -24,7 +24,7 @@ public class IssueWriteService {
     private final AttachmentRepository attachmentRepository;
 
     @Transactional
-    public Long writeIssue(IssueWriteRequest issueWriteRequest, List<MultipartFile> files) {
+    public Long writeIssue(IssueWriteRequest issueWriteRequest, List<MultipartFile> files, Long authorId) {
 
         Set<Assignee> assignees = issueWriteRequest.assigneeIds().stream()
                 .map(memberId -> new Assignee(null, memberId))
@@ -38,7 +38,7 @@ public class IssueWriteService {
                 issueWriteRequest.title(),
                 issueWriteRequest.contents(),
                 issueWriteRequest.milestoneId(),
-                1L, // TODO: 로그인 기능 구현 후 실제 사용자 ID로 변경
+                authorId,
                 assignees,
                 issueLabels
         );

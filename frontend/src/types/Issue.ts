@@ -8,11 +8,17 @@ export interface Label {
     name: string;
     backgroundColor: string;
     textColor: string;
+    description?: string;
 }
 
 export interface Milestone {
     id: number;
     name: string;
+    description?: string;
+    completionDate?: string;
+    isOpened?: boolean;
+    openIssueNum?: number;
+    closedIssueNum?: number;
     progress?: number;
 }
 
@@ -38,11 +44,13 @@ export interface IssueDetail {
     milestone: Milestone | null;
 }
 
-export interface IssueDetailResponse {
+export interface CommonResponse<T = unknown> {
     success: boolean;
     message: string;
-    data: IssueDetail;
+    data: T;
 }
+
+export type IssueDetailResponse = CommonResponse<IssueDetail>;
 
 export interface Issue {
     id: number;
@@ -54,7 +62,7 @@ export interface Issue {
     milestone: Milestone | null;
 }
 
-export interface IssueResponse {
+export interface IssueListResponse {
     success: boolean;
     message: string;
     data: {
@@ -66,4 +74,38 @@ export interface IssueResponse {
             milestoneCount: number;
         }
     }
+}
+
+export interface LabelPageResponse {
+    success: boolean;
+    message: string;
+    data: {
+        metadata: {
+            labelCount: number;
+            milestoneCount: number;
+        };
+        labels: Label[];
+    };
+}
+
+export interface MilestoneListResponse {
+    success: boolean;
+    message: string;
+    data: {
+        milestones: Milestone[];
+    };
+}
+
+export interface IssueType {
+    id: number;
+    status: 'open' | 'closed';
+    title: string;
+    labels: {
+        text: string;
+        color: string;
+        textColor: string;
+    }[];
+    authorName: string;
+    timestamp: string;
+    milestoneTitle: string | null;
 }

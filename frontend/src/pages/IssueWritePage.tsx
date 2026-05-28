@@ -5,11 +5,7 @@ import { useNavigate } from "react-router-dom";
 import ListFilterDropdown from "../components/issue/ListFilterDropdown";
 import { useImageUpload } from "../hooks/useImageUpload";
 import { fetchWithAuth } from "../utils/api";
-
-// 데이터 타입 정의
-interface Member { id: number; name: string; }
-interface Label { id: number; name: string; backgroundColor: string; }
-interface Milestone { id: number; name: string; }
+import type { User, Label, Milestone } from "../types/Issue";
 
 export default function IssueWritePage() {
     const navigate = useNavigate();
@@ -19,7 +15,7 @@ export default function IssueWritePage() {
     const [contents, setContents] = useState("");
 
     // 서버 데이터 상태
-    const [allMembers, setAllMembers] = useState<Member[]>([]);
+    const [allMembers, setAllMembers] = useState<User[]>([]);
     const [allLabels, setAllLabels] = useState<Label[]>([]);
     const [allMilestones, setAllMilestones] = useState<Milestone[]>([]);
 

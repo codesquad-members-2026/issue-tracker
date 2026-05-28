@@ -24,7 +24,7 @@ public class CommentService {
     private final AttachmentRepository attachmentRepository;
 
     @Transactional
-    public Long createComment(Long issueId, CommentRequest commentRequest) {
+    public Comment createComment(Long issueId, CommentRequest commentRequest, Long memberId) {
 
         issueRepository.findActiveById(issueId)
                 .orElseThrow(() -> new IssueTrackerException(ErrorCode.CAN_NOT_FOUND_THE_PAGE));
@@ -32,7 +32,7 @@ public class CommentService {
         Comment comment = new Comment(
                 null,
                 issueId,
-                1L, //TODO : 고정값 변경하기
+                memberId,
                 commentRequest.contents(),
                 LocalDateTime.now(),
                 null
@@ -50,11 +50,11 @@ public class CommentService {
             attachmentRepository.saveAll(attachments);
         }
 
-        return newCommentId;
+        return savedComment;
     }
 
     @Transactional
-    public void updateComment(Long issueId, Long commentId, CommentRequest commentRequest) {
+    public void updateComment(Long issueId, Long commentId, CommentRequest commentRequest, Long memberId) {
 
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new IssueTrackerException(ErrorCode.CAN_NOT_FOUND_THE_PAGE));
@@ -63,8 +63,7 @@ public class CommentService {
             throw new IssueTrackerException(ErrorCode.INVALID_QUERY_MESSAGE);
         }
 
-        //TODO: 1L 인 부분 나중에 로그인 하면 받아오기
-        if (!comment.isAuthor(1L)) {
+        if (!comment.isAuthor(memberId)) {
             throw new IssueTrackerException(ErrorCode.INVALID_QUERY_MESSAGE);
         }
 

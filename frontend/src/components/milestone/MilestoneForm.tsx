@@ -5,8 +5,8 @@ import { COLORS } from "../../utils/color.ts";
 interface MilestoneData {
     id?: number;
     name: string;
-    description: string;
-    completionDate: string; // "yy. MM. dd" or "yyyy-MM-dd" depending on input
+    description?: string;
+    completionDate?: string; // "yy. MM. dd" or "yyyy-MM-dd" depending on input
 }
 
 interface MilestoneFormProps {
