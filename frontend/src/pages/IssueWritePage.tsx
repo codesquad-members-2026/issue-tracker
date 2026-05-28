@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 import ListFilterDropdown from "../components/issue/ListFilterDropdown";
 import { useImageUpload } from "../hooks/useImageUpload";
 import { fetchWithAuth } from "../utils/api.ts";
+import ListFilterDropdown from "../components/issue/ListFilterDropdown";
+import { useImageUpload } from "../hooks/useImageUpload";
 
 // 데이터 타입 정의
 interface Member { id: number; name: string; }
@@ -123,7 +125,7 @@ export default function IssueWritePage() {
                         <div className="relative">
                             <textarea
                                 placeholder="코멘트를 입력하세요"
-                                className="w-full h-96 p-4 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#007AFF] resize-none pb-12"
+                                className="w-full h-96 p-4 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#007AFF] resize-none"
                                 value={contents}
                                 onChange={(e) => setContents(e.target.value)}
                             />
