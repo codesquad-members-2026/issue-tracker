@@ -1,12 +1,12 @@
 import toast from 'react-hot-toast';
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import CommentItem from "../components/issue/CommentItem.tsx";
-import CommentInput from "../components/issue/CommentInput.tsx";
-import IssueDetailHeader from "../components/issue/IssueDetailHeader.tsx";
-import IssueDetailSidebar from "../components/issue/IssueDetailSidebar.tsx";
+import CommentItem from "../components/issue/CommentItem";
+import CommentInput from "../components/issue/CommentInput";
+import IssueDetailHeader from "../components/issue/IssueDetailHeader";
+import IssueDetailSidebar from "../components/issue/IssueDetailSidebar";
 import type { IssueDetail, IssueDetailResponse, Comment, User, Label, Milestone } from "../types/Issue";
-import { fetchWithAuth } from "../utils/api.ts";
+import { fetchWithAuth } from "../utils/api";
 
 export default function IssueDetailPage() {
     const { id } = useParams<{ id: string }>();
@@ -50,7 +50,7 @@ export default function IssueDetailPage() {
                 const [mRes, lRes, miRes] = await Promise.all([
                     fetchWithAuth(`${import.meta.env.VITE_API_URL}/api/members`),
                     fetchWithAuth(`${import.meta.env.VITE_API_URL}/api/labels`),
-                    fetchWithAuth(`${import.meta.env.VITE_API_URL}/api/milestones`)
+                    fetchWithAuth(`${import.meta.env.VITE_API_URL}/api/milestones?state=OPEN`)
                 ]);
 
                 const mResult = await mRes.json();
@@ -58,8 +58,8 @@ export default function IssueDetailPage() {
                 const miResult = await miRes.json();
 
                 if (mResult.success) setAllMembers(mResult.data);
-                if (lResult.success) setAllLabels(lResult.data.labels);
-                if (miResult.success) setAllMilestones(miResult.data);
+                if (lResult.success) setAllLabels(lResult.data.labels || []);
+                if (miResult.success) setAllMilestones(miResult.data.milestones || []);
             } catch (error) {
                 console.error("데이터 로딩 실패:", error);
             }

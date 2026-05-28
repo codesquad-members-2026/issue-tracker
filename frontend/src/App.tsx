@@ -1,15 +1,15 @@
 // src/App.tsx
 import { BrowserRouter, Routes, Route, Outlet, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
-import Header from './components/Header.tsx';
-import IssueListPage from './pages/IssueListPage.tsx';
-import IssueWritePage from './pages/IssueWritePage.tsx';
-import IssueDetailPage from './pages/IssueDetailPage.tsx';
-import LabelPage from './pages/LabelPage.tsx';
-import MilestonePage from './pages/MilestonePage.tsx';
-import LoginPage from './pages/LoginPage.tsx';
-import SignupPage from './pages/SignupPage.tsx';
-import AuthCallbackPage from './pages/AuthCallbackPage.tsx';
+import Header from './components/Header';
+import IssueListPage from './pages/IssueListPage';
+import IssueWritePage from './pages/IssueWritePage';
+import IssueDetailPage from './pages/IssueDetailPage';
+import LabelPage from './pages/LabelPage';
+import MilestonePage from './pages/MilestonePage';
+import LoginPage from './pages/LoginPage';
+import SignupPage from './pages/SignupPage';
+import AuthCallbackPage from './pages/AuthCallbackPage';
 
 // 헤더를 포함하며 토큰 유무를 검사하는 보호된 레이아웃 컴포넌트
 const ProtectedLayout = () => {

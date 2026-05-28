@@ -1,12 +1,12 @@
 // src/pages/MilestonePage.tsx
 import { useState, useEffect, useCallback } from "react";
-import TabNavigation from "../components/TabNavigation.tsx";
-import ListContainer from "../components/ListContainer.tsx";
-import AddMilestoneButton from "../components/milestone/AddMilestoneButton.tsx";
-import MilestoneListHeader from "../components/milestone/MilestoneListHeader.tsx";
-import MilestoneItem from "../components/milestone/MilestoneItem.tsx";
-import MilestoneForm from "../components/milestone/MilestoneForm.tsx";
-import { fetchWithAuth } from "../utils/api.ts";
+import TabNavigation from "../components/TabNavigation";
+import ListContainer from "../components/ListContainer";
+import AddMilestoneButton from "../components/milestone/AddMilestoneButton";
+import MilestoneListHeader from "../components/milestone/MilestoneListHeader";
+import MilestoneItem from "../components/milestone/MilestoneItem";
+import MilestoneForm from "../components/milestone/MilestoneForm";
+import { fetchWithAuth } from "../utils/api";
 
 // --- Types ---
 interface Milestone {

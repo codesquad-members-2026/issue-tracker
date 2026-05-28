@@ -1,11 +1,11 @@
 // src/pages/LabelPage.tsx
 import { useState, useEffect } from "react";
-import TabNavigation from "../components/TabNavigation.tsx";
-import AddLabelButton from "../components/label/AddLabelButton.tsx";
-import LabelList from "../components/label/LabelList.tsx";
-import LabelItem from "../components/label/LabelItem.tsx";
-import LabelForm from "../components/label/LabelForm.tsx";
-import { fetchWithAuth } from "../utils/api.ts";
+import TabNavigation from "../components/TabNavigation";
+import AddLabelButton from "../components/label/AddLabelButton";
+import LabelList from "../components/label/LabelList";
+import LabelItem from "../components/label/LabelItem";
+import LabelForm from "../components/label/LabelForm";
+import { fetchWithAuth } from "../utils/api";
 
 // --- Types ---
 interface Label {

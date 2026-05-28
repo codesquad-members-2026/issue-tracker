@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import ListFilterDropdown from "../components/issue/ListFilterDropdown";
 import { useImageUpload } from "../hooks/useImageUpload";
-import { fetchWithAuth } from "../utils/api.ts";
+import { fetchWithAuth } from "../utils/api";
 
 // 데이터 타입 정의
 interface Member { id: number; name: string; }
@@ -37,7 +37,7 @@ export default function IssueWritePage() {
                 const [mRes, lRes, miRes] = await Promise.all([
                     fetchWithAuth(`${import.meta.env.VITE_API_URL}/api/members`),
                     fetchWithAuth(`${import.meta.env.VITE_API_URL}/api/labels`),
-                    fetchWithAuth(`${import.meta.env.VITE_API_URL}/api/milestones`)
+                    fetchWithAuth(`${import.meta.env.VITE_API_URL}/api/milestones?state=OPEN`)
                 ]);
 
                 const mResult = await mRes.json();
@@ -67,7 +67,6 @@ export default function IssueWritePage() {
             const issueData = {
                 title: title.trim(),
                 contents: contents.trim(),
-                authorId: 1,
                 assigneeIds: selectedMemberIds,
                 labelIds: selectedLabelIds,
                 milestoneId: selectedMilestoneId
