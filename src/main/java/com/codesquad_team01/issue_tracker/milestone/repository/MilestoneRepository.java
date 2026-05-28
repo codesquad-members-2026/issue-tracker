@@ -13,6 +13,7 @@ import java.util.Optional;
 
 public interface MilestoneRepository extends ListCrudRepository<Milestone, Long> {
 
+    @Query("SELECT COUNT(*) FROM milestone WHERE deleted_at IS NULL")
     long countByDeletedAtIsNull();
 
     @Query("SELECT " +

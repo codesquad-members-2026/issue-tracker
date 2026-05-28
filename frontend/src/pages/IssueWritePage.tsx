@@ -45,8 +45,8 @@ export default function IssueWritePage() {
                 const miResult = await miRes.json();
 
                 if (mResult.success) setAllMembers(mResult.data);
-                if (lResult.success) setAllLabels(lResult.data.labels);
-                if (miResult.success) setAllMilestones(miResult.data);
+                if (lResult.success) setAllLabels(lResult.data.labels || []);
+                if (miResult.success) setAllMilestones(miResult.data.milestones || []);
             } catch (error) {
                 console.error("데이터 로딩 실패:", error);
             }
