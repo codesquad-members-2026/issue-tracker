@@ -33,6 +33,18 @@ class IssueControllerTest {
     @MockitoBean
     private IssueDetailService issueDetailService;
 
+    @MockitoBean
+    private com.codesquad_team01.issue_tracker.auth.JwtInterceptor jwtInterceptor;
+
+    @MockitoBean
+    private com.codesquad_team01.issue_tracker.auth.LoginMemberArgumentResolver loginMemberArgumentResolver;
+
+    @org.junit.jupiter.api.BeforeEach
+    void setUp() throws Exception {
+        org.mockito.BDDMockito.given(jwtInterceptor.preHandle(org.mockito.ArgumentMatchers.any(), org.mockito.ArgumentMatchers.any(), org.mockito.ArgumentMatchers.any()))
+                .willReturn(true);
+    }
+
     @Test
     @DisplayName("이슈 삭제 성공 시 200 OK와 성공 메시지를 반환한다.")
     void deleteIssueSuccess() throws Exception {

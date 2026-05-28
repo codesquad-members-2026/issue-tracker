@@ -35,6 +35,19 @@ public class LabelControllerTest {
 
     @MockitoBean
     private LabelService labelService;
+
+    @MockitoBean
+    private com.codesquad_team01.issue_tracker.auth.JwtInterceptor jwtInterceptor;
+
+    @MockitoBean
+    private com.codesquad_team01.issue_tracker.auth.LoginMemberArgumentResolver loginMemberArgumentResolver;
+
+    @org.junit.jupiter.api.BeforeEach
+    void setUp() throws Exception {
+        org.mockito.BDDMockito.given(jwtInterceptor.preHandle(org.mockito.ArgumentMatchers.any(), org.mockito.ArgumentMatchers.any(), org.mockito.ArgumentMatchers.any()))
+                .willReturn(true);
+    }
+
     @Autowired
     private ObjectMapper objectMapper;
 

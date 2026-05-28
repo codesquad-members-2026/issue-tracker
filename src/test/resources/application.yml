@@ -14,3 +14,16 @@ spring:
         static: ap-northeast-2
       s3:
         bucket: test-bucket
+
+jwt:
+  secret: test_secret_key_test_secret_key_test_secret_key_test_secret_key
+  access-token-expiration: 900000
+  refresh-token-expiration: 604800000
+
+oauth:
+  github:
+    client-id: test-id
+    client-secret: test-secret
+    redirect-uri: test-uri
+    token-url: https://github.com/login/oauth/access_token
+    user-url: https://api.github.com/user
