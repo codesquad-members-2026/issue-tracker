@@ -1,3 +1,4 @@
+import toast from 'react-hot-toast';
 import { useState, useEffect } from 'react';
 import type { FC } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -47,11 +48,11 @@ const LoginPage: FC = () => {
                 localStorage.setItem('accessToken', token);
                 navigate('/', { replace: true });
             } else {
-                alert(result.message || '아이디 또는 비밀번호를 확인해주세요.');
+                toast.error(result.message || '아이디 또는 비밀번호를 확인해주세요.');
             }
         } catch (error) {
             console.error('로그인 에러:', error);
-            alert('서버와 통신 중 문제가 발생했습니다.');
+            toast.error('서버와 통신 중 문제가 발생했습니다.');
         } finally {
             setIsLoading(false);
         }

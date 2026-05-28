@@ -1,3 +1,4 @@
+import toast from 'react-hot-toast';
 import { useState, useEffect } from 'react';
 import type { FC } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -36,7 +37,7 @@ const SignupPage: FC = () => {
             const result = await response.json();
 
             if (response.ok && result.success) {
-                alert('회원가입이 완료되었습니다! 로그인해 주세요.');
+                toast.success('회원가입이 완료되었습니다! 로그인해 주세요.');
                 navigate('/login');
             } else {
                 // 에러 발생 시
@@ -49,11 +50,11 @@ const SignupPage: FC = () => {
                     errorMessage = result.errors[0].defaultMessage;
                 }
                 
-                alert(errorMessage);
+                toast.error(errorMessage);
             }
         } catch (error) {
             console.error('회원가입 에러:', error);
-            alert('서버와 통신 중 문제가 발생했습니다.');
+            toast.error('서버와 통신 중 문제가 발생했습니다.');
         } finally {
             setIsLoading(false);
         }

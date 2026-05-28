@@ -1,3 +1,4 @@
+import toast from 'react-hot-toast';
 // src/pages/IssueWritePage.tsx
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -86,11 +87,11 @@ export default function IssueWritePage() {
             if (response.ok && result.success) {
                 navigate("/");
             } else {
-                alert("이슈 저장에 실패했습니다: " + result.message);
+                toast.error("이슈 저장에 실패했습니다: " + result.message);
             }
         } catch (error) {
             console.error("이슈 저장 중 오류 발생:", error);
-            alert("서버와 통신 중 오류가 발생했습니다.");
+            toast.error("서버와 통신 중 오류가 발생했습니다.");
         }
     };
 

@@ -1,3 +1,4 @@
+import toast from 'react-hot-toast';
 import { useEffect, useRef } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
@@ -10,7 +11,7 @@ export default function AuthCallbackPage() {
         const code = searchParams.get('code');
 
         if (!code) {
-            alert('인증 코드가 없습니다.');
+            toast.error('인증 코드가 없습니다.');
             navigate('/login', { replace: true });
             return;
         }
@@ -40,12 +41,12 @@ export default function AuthCallbackPage() {
                     // 로그인 성공 후 메인 페이지로 이동
                     navigate('/', { replace: true });
                 } else {
-                    alert('로그인에 실패했습니다: ' + result.message);
+                    toast.error('로그인에 실패했습니다: ' + result.message);
                     navigate('/login', { replace: true });
                 }
             } catch (error) {
                 console.error('로그인 처리 중 에러 발생:', error);
-                alert('로그인 처리 중 문제가 발생했습니다.');
+                toast.error('로그인 처리 중 문제가 발생했습니다.');
                 navigate('/login', { replace: true });
             }
         };

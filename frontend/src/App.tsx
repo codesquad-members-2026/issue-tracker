@@ -1,5 +1,6 @@
 // src/App.tsx
 import { BrowserRouter, Routes, Route, Outlet, Navigate } from 'react-router-dom';
+import { Toaster } from 'react-hot-toast';
 import Header from './components/Header.tsx';
 import IssueListPage from './pages/IssueListPage.tsx';
 import IssueWritePage from './pages/IssueWritePage.tsx';
@@ -31,6 +32,7 @@ const ProtectedLayout = () => {
 function App() {
     return (
         <BrowserRouter>
+            <Toaster position="top-center" />
             <div className="min-h-screen bg-slate-100 font-sans">
                 <Routes>
                     {/* 로그인 페이지는 헤더가 필요 없으므로 ProtectedLayout 밖에 둡니다. */}

@@ -1,3 +1,4 @@
+import toast from 'react-hot-toast';
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import CommentItem from "../components/issue/CommentItem.tsx";
@@ -32,12 +33,12 @@ export default function IssueDetailPage() {
                     setIssue(result.data);
                     setEditedTitle(result.data.title);
                 } else {
-                    alert(result.message);
+                    toast.error(result.message);
                     navigate("/");
                 }
             } catch (error) {
                 console.error("이슈 상세 정보를 불러오는데 실패했습니다.", error);
-                alert("데이터 로딩 중 오류가 발생했습니다.");
+                toast.error("데이터 로딩 중 오류가 발생했습니다.");
                 navigate("/");
             } finally {
                 setIsLoading(false);
@@ -90,11 +91,11 @@ export default function IssueDetailPage() {
             if (result.success) {
                 setIssue(prev => prev ? { ...prev, isOpened: !prev.isOpened } : null);
             } else {
-                alert("상태 변경 실패: " + result.message);
+                toast.error("상태 변경 실패: " + result.message);
             }
         } catch (error) {
             console.error("이슈 상태 변경 중 오류 발생:", error);
-            alert("처리 중 오류가 발생했습니다.");
+            toast.error("처리 중 오류가 발생했습니다.");
         }
     };
 
@@ -110,11 +111,11 @@ export default function IssueDetailPage() {
             if (result.success) {
                 navigate("/");
             } else {
-                alert("이슈 삭제 실패: " + result.message);
+                toast.error("이슈 삭제 실패: " + result.message);
             }
         } catch (error) {
             console.error("이슈 삭제 중 오류 발생:", error);
-            alert("삭제 처리 중 오류가 발생했습니다.");
+            toast.error("삭제 처리 중 오류가 발생했습니다.");
         }
     };
 
@@ -138,11 +139,11 @@ export default function IssueDetailPage() {
                 setIssue(prev => prev ? { ...prev, title: editedTitle } : null);
                 setIsEditingTitle(false);
             } else {
-                alert("제목 수정 실패: " + result.message);
+                toast.error("제목 수정 실패: " + result.message);
             }
         } catch (error) {
             console.error("제목 수정 중 오류 발생:", error);
-            alert("처리 중 오류가 발생했습니다.");
+            toast.error("처리 중 오류가 발생했습니다.");
         }
     };
 
@@ -164,11 +165,11 @@ export default function IssueDetailPage() {
             if (result.success) {
                 setIssue(prev => prev ? { ...prev, contents: contents } : null);
             } else {
-                alert("본문 수정 실패: " + result.message);
+                toast.error("본문 수정 실패: " + result.message);
             }
         } catch (error) {
             console.error("본문 수정 중 오류 발생:", error);
-            alert("처리 중 오류가 발생했습니다.");
+            toast.error("처리 중 오류가 발생했습니다.");
         }
     };
 
@@ -194,11 +195,11 @@ export default function IssueDetailPage() {
                     };
                 });
             } else {
-                alert("댓글 수정 실패: " + result.message);
+                toast.error("댓글 수정 실패: " + result.message);
             }
         } catch (error) {
             console.error("댓글 수정 중 오류 발생:", error);
-            alert("처리 중 오류가 발생했습니다.");
+            toast.error("처리 중 오류가 발생했습니다.");
         }
     };
 
@@ -221,11 +222,11 @@ export default function IssueDetailPage() {
                     commentCount: prev.commentCount + 1
                 } : null);
             } else {
-                alert("댓글 작성 실패: " + result.message);
+                toast.error("댓글 작성 실패: " + result.message);
             }
         } catch (error) {
             console.error("댓글 작성 중 오류 발생:", error);
-            alert("처리 중 오류가 발생했습니다.");
+            toast.error("처리 중 오류가 발생했습니다.");
         }
     };
 
@@ -241,7 +242,7 @@ export default function IssueDetailPage() {
                 const updatedAssignees = allMembers.filter(m => assigneeIds.includes(m.id));
                 setIssue(prev => prev ? { ...prev, assignees: updatedAssignees } : null);
             } else {
-                alert("담당자 수정 실패: " + result.message);
+                toast.error("담당자 수정 실패: " + result.message);
             }
         } catch (error) {
             console.error("담당자 수정 중 오류 발생:", error);
@@ -260,7 +261,7 @@ export default function IssueDetailPage() {
                 const updatedLabels = allLabels.filter(l => labelIds.includes(l.id));
                 setIssue(prev => prev ? { ...prev, labels: updatedLabels } : null);
             } else {
-                alert("레이블 수정 실패: " + result.message);
+                toast.error("레이블 수정 실패: " + result.message);
             }
         } catch (error) {
             console.error("레이블 수정 중 오류 발생:", error);
@@ -279,7 +280,7 @@ export default function IssueDetailPage() {
                 const updatedMilestone = allMilestones.find(m => m.id === milestoneId) || null;
                 setIssue(prev => prev ? { ...prev, milestone: updatedMilestone } : null);
             } else {
-                alert("마일스톤 수정 실패: " + result.message);
+                toast.error("마일스톤 수정 실패: " + result.message);
             }
         } catch (error) {
             console.error("마일스톤 수정 중 오류 발생:", error);
