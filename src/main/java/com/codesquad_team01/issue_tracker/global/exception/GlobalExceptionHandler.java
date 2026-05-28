@@ -13,12 +13,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(IssueTrackerException.class)
     public ResponseEntity<ApiResponse<Void>> handleIssueTrackerException(IssueTrackerException e) {
         ErrorCode errorCode = e.getErrorCode();
-        HttpStatus status = switch (errorCode) {
-            case INVALID_QUERY_MESSAGE -> HttpStatus.BAD_REQUEST;
-            case CAN_NOT_FOUND_THE_PAGE -> HttpStatus.NOT_FOUND;
-        };
-
-        return ResponseEntity.status(status)
+        
+        return ResponseEntity.status(errorCode.getHttpStatus())
                 .body(ApiResponse.fail(errorCode.getMessage(), errorCode.name()));
     }
 

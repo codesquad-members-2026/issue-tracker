@@ -1,10 +1,11 @@
 // src/pages/LabelPage.tsx
 import { useState, useEffect } from "react";
-import TabNavigation from "../components/TabNavigation.tsx";
-import AddLabelButton from "../components/label/AddLabelButton.tsx";
-import LabelList from "../components/label/LabelList.tsx";
-import LabelItem from "../components/label/LabelItem.tsx";
-import LabelForm from "../components/label/LabelForm.tsx";
+import TabNavigation from "../components/TabNavigation";
+import AddLabelButton from "../components/label/AddLabelButton";
+import LabelList from "../components/label/LabelList";
+import LabelItem from "../components/label/LabelItem";
+import LabelForm from "../components/label/LabelForm";
+import { fetchWithAuth } from "../utils/api";
 
 // --- Types ---
 interface Label {
@@ -38,7 +39,7 @@ export default function LabelPage() {
     useEffect(() => {
         const fetchLabels = async () => {
             try {
-                const response = await fetch(`${import.meta.env.VITE_API_URL}/api/labels`);
+                const response = await fetchWithAuth(`${import.meta.env.VITE_API_URL}/api/labels`);
                 const result: LabelPageResponse = await response.json();
                 if (result.success) {
                     setLabels(result.data.labels);
@@ -59,7 +60,7 @@ export default function LabelPage() {
     const handleEditStart = async (label: Label) => {
         setIsAdding(false);
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/labels/${label.id}`);
+            const response = await fetchWithAuth(`${import.meta.env.VITE_API_URL}/api/labels/${label.id}`);
             const result = await response.json();
             if (result.success) {
                 setEditingLabelData(result.data);
@@ -78,7 +79,7 @@ export default function LabelPage() {
         const method = isEdit ? "PATCH" : "POST";
 
         try {
-            const response = await fetch(url, {
+            const response = await fetchWithAuth(url, {
                 method,
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -109,7 +110,7 @@ export default function LabelPage() {
     const handleDelete = async (id: number) => {
         if (!window.confirm("정말로 이 레이블을 삭제하시겠습니까?")) return;
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/labels/${id}`, {
+            const response = await fetchWithAuth(`${import.meta.env.VITE_API_URL}/api/labels/${id}`, {
                 method: "DELETE"
             });
             const result = await response.json();

@@ -8,15 +8,20 @@ DROP TABLE IF EXISTS `issue`;
 DROP TABLE IF EXISTS `label`;
 DROP TABLE IF EXISTS `milestone`;
 DROP TABLE IF EXISTS `member`;
+DROP TABLE IF EXISTS `refresh_token`;
 SET FOREIGN_KEY_CHECKS = 1;
 
 -- 1. 회원 정보
 CREATE TABLE `member` (
                            `id` bigint PRIMARY KEY AUTO_INCREMENT,
+
                            `user_id` varchar(50) UNIQUE NOT NULL,
-                           `name` varchar(50) NOT NULL,
-                           `password` varchar(255) NOT NULL,
-                           `email` varchar(255) NOT NULL,
+                           `name` varchar(50) NULL,
+                           `email` varchar(255) NULL,
+
+                           `password` varchar(255) NULL,
+                           `oauth_id` bigint UNIQUE,
+
                            `deleted_at` datetime DEFAULT NULL -- 기본값 NULL로 수정
 );
 
@@ -88,6 +93,13 @@ CREATE TABLE `issue_label` (
                                 `label_id` bigint NOT NULL
 );
 
+-- 9. 리프레쉬 토큰
+CREATE TABLE `refresh_token`(
+    `id` bigint PRIMARY KEY AUTO_INCREMENT,
+    `member_id` bigint NOT NULL,
+    `token` varchar(512) NOT NULL
+);
+
 -- 유니크 인덱스 (중복 할당 방지)
 CREATE UNIQUE INDEX `assignee_index_0` ON `assignee` (`issue_id`, `member_id`);
 CREATE UNIQUE INDEX `issue_label_index_1` ON `issue_label` (`issue_id`, `label_id`);
@@ -103,3 +115,4 @@ ALTER TABLE `assignee` ADD FOREIGN KEY (`issue_id`) REFERENCES `issue` (`id`) ON
 ALTER TABLE `assignee` ADD FOREIGN KEY (`member_id`) REFERENCES `member` (`id`);
 ALTER TABLE `issue_label` ADD FOREIGN KEY (`issue_id`) REFERENCES `issue` (`id`) ON DELETE CASCADE;
 ALTER TABLE `issue_label` ADD FOREIGN KEY (`label_id`) REFERENCES `label` (`id`);
+ALTER TABLE `refresh_token` ADD FOREIGN KEY (`member_id`) REFERENCES `member` (`id`) ON DELETE CASCADE;

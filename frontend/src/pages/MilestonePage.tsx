@@ -1,11 +1,12 @@
 // src/pages/MilestonePage.tsx
 import { useState, useEffect, useCallback } from "react";
-import TabNavigation from "../components/TabNavigation.tsx";
-import ListContainer from "../components/ListContainer.tsx";
-import AddMilestoneButton from "../components/milestone/AddMilestoneButton.tsx";
-import MilestoneListHeader from "../components/milestone/MilestoneListHeader.tsx";
-import MilestoneItem from "../components/milestone/MilestoneItem.tsx";
-import MilestoneForm from "../components/milestone/MilestoneForm.tsx";
+import TabNavigation from "../components/TabNavigation";
+import ListContainer from "../components/ListContainer";
+import AddMilestoneButton from "../components/milestone/AddMilestoneButton";
+import MilestoneListHeader from "../components/milestone/MilestoneListHeader";
+import MilestoneItem from "../components/milestone/MilestoneItem";
+import MilestoneForm from "../components/milestone/MilestoneForm";
+import { fetchWithAuth } from "../utils/api";
 
 // --- Types ---
 interface Milestone {
@@ -39,15 +40,15 @@ export default function MilestonePage() {
     const fetchData = useCallback(async () => {
         try {
             // 레이블/마일스톤 메타데이터 (전체 개수용)
-            const metaRes = await fetch(`${import.meta.env.VITE_API_URL}/api/labels`);
+            const metaRes = await fetchWithAuth(`${import.meta.env.VITE_API_URL}/api/labels`);
             const metaResult = await metaRes.json();
             
             // 열린 마일스톤 목록
-            const openRes = await fetch(`${import.meta.env.VITE_API_URL}/api/milestones?state=OPEN`);
+            const openRes = await fetchWithAuth(`${import.meta.env.VITE_API_URL}/api/milestones?state=OPEN`);
             const openResult: MilestoneListResponse = await openRes.json();
 
             // 닫힌 마일스톤 목록
-            const closedRes = await fetch(`${import.meta.env.VITE_API_URL}/api/milestones?state=CLOSED`);
+            const closedRes = await fetchWithAuth(`${import.meta.env.VITE_API_URL}/api/milestones?state=CLOSED`);
             const closedResult: MilestoneListResponse = await closedRes.json();
 
             if (metaResult.success && openResult.success && closedResult.success) {
@@ -82,7 +83,7 @@ export default function MilestonePage() {
     const handleEditStart = async (milestone: Milestone) => {
         setIsAdding(false);
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/milestones/${milestone.id}`);
+            const response = await fetchWithAuth(`${import.meta.env.VITE_API_URL}/api/milestones/${milestone.id}`);
             const result = await response.json();
             if (result.success) {
                 setEditingData(result.data);
@@ -102,7 +103,7 @@ export default function MilestonePage() {
         const method = isEdit ? "PATCH" : "POST";
 
         try {
-            const response = await fetch(url, {
+            const response = await fetchWithAuth(url, {
                 method,
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -128,7 +129,7 @@ export default function MilestonePage() {
     const handleDelete = async (id: number) => {
         if (!window.confirm("정말로 이 마일스톤을 삭제하시겠습니까?")) return;
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/milestones/${id}`, {
+            const response = await fetchWithAuth(`${import.meta.env.VITE_API_URL}/api/milestones/${id}`, {
                 method: "DELETE"
             });
             const result = await response.json();
@@ -144,7 +145,7 @@ export default function MilestonePage() {
     const handleToggleStatus = async (milestone: Milestone) => {
         const nextState = milestone.isOpened ? "CLOSED" : "OPEN";
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/milestones/${milestone.id}/state`, {
+            const response = await fetchWithAuth(`${import.meta.env.VITE_API_URL}/api/milestones/${milestone.id}/state`, {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ state: nextState })

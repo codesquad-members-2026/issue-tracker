@@ -1,8 +1,10 @@
+import toast from 'react-hot-toast';
 // src/pages/IssueWritePage.tsx
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import ListFilterDropdown from "../components/issue/ListFilterDropdown";
 import { useImageUpload } from "../hooks/useImageUpload";
+import { fetchWithAuth } from "../utils/api";
 
 // 데이터 타입 정의
 interface Member { id: number; name: string; }
@@ -33,9 +35,9 @@ export default function IssueWritePage() {
         const fetchAllMetadata = async () => {
             try {
                 const [mRes, lRes, miRes] = await Promise.all([
-                    fetch(`${import.meta.env.VITE_API_URL}/api/members`),
-                    fetch(`${import.meta.env.VITE_API_URL}/api/labels`),
-                    fetch(`${import.meta.env.VITE_API_URL}/api/milestones?state=OPEN`)
+                    fetchWithAuth(`${import.meta.env.VITE_API_URL}/api/members`),
+                    fetchWithAuth(`${import.meta.env.VITE_API_URL}/api/labels`),
+                    fetchWithAuth(`${import.meta.env.VITE_API_URL}/api/milestones?state=OPEN`)
                 ]);
 
                 const mResult = await mRes.json();
@@ -65,7 +67,6 @@ export default function IssueWritePage() {
             const issueData = {
                 title: title.trim(),
                 contents: contents.trim(),
-                authorId: 1,
                 assigneeIds: selectedMemberIds,
                 labelIds: selectedLabelIds,
                 milestoneId: selectedMilestoneId
@@ -75,7 +76,7 @@ export default function IssueWritePage() {
             const requestBlob = new Blob([JSON.stringify(issueData)], { type: 'application/json' });
             formData.append('request', requestBlob);
 
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/issues`, {
+            const response = await fetchWithAuth(`${import.meta.env.VITE_API_URL}/api/issues`, {
                 method: "POST",
                 body: formData,
             });
@@ -85,11 +86,11 @@ export default function IssueWritePage() {
             if (response.ok && result.success) {
                 navigate("/");
             } else {
-                alert("이슈 저장에 실패했습니다: " + result.message);
+                toast.error("이슈 저장에 실패했습니다: " + result.message);
             }
         } catch (error) {
             console.error("이슈 저장 중 오류 발생:", error);
-            alert("서버와 통신 중 오류가 발생했습니다.");
+            toast.error("서버와 통신 중 오류가 발생했습니다.");
         }
     };
 
@@ -121,7 +122,7 @@ export default function IssueWritePage() {
                         <div className="relative">
                             <textarea
                                 placeholder="코멘트를 입력하세요"
-                                className="w-full h-96 p-4 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#007AFF] resize-none pb-12"
+                                className="w-full h-96 p-4 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#007AFF] resize-none"
                                 value={contents}
                                 onChange={(e) => setContents(e.target.value)}
                             />

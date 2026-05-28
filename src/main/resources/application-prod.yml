@@ -8,8 +8,21 @@ spring:
     init:
       mode: never
 
+oauth:
+  github:
+    client-id: ${OAUTH_CLIENT_ID}
+    client-secret: ${OAUTH_CLIENT_SECRET}
+    redirect-uri: ${OAUTH_REDIRECT_URI}
+    token-url: https://github.com/login/oauth/access_token
+    user-url: https://api.github.com/user
+
 logging:
   level:
     root: INFO
     # 자바 프로젝트 기본 패키지(Base Package) 경로 / src/main/java/com/codesquad_team01/issue_tracker
     com.codesquad_team01.issue_tracker: INFO
+
+jwt:
+  secret: ${JWT_SECRET_KEY}
+  access-token-expiration: 900000
+  refresh-token-expiration: 604800000

@@ -1,10 +1,12 @@
+import toast from 'react-hot-toast';
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import CommentItem from "../components/issue/CommentItem.tsx";
-import CommentInput from "../components/issue/CommentInput.tsx";
-import IssueDetailHeader from "../components/issue/IssueDetailHeader.tsx";
-import IssueDetailSidebar from "../components/issue/IssueDetailSidebar.tsx";
+import CommentItem from "../components/issue/CommentItem";
+import CommentInput from "../components/issue/CommentInput";
+import IssueDetailHeader from "../components/issue/IssueDetailHeader";
+import IssueDetailSidebar from "../components/issue/IssueDetailSidebar";
 import type { IssueDetail, IssueDetailResponse, Comment, User, Label, Milestone } from "../types/Issue";
+import { fetchWithAuth } from "../utils/api";
 
 export default function IssueDetailPage() {
     const { id } = useParams<{ id: string }>();
@@ -24,19 +26,19 @@ export default function IssueDetailPage() {
     useEffect(() => {
         const fetchIssueDetail = async () => {
             try {
-                const response = await fetch(`${import.meta.env.VITE_API_URL}/api/issues/${id}`);
+                const response = await fetchWithAuth(`${import.meta.env.VITE_API_URL}/api/issues/${id}`);
                 const result: IssueDetailResponse = await response.json();
 
                 if (result.success) {
                     setIssue(result.data);
                     setEditedTitle(result.data.title);
                 } else {
-                    alert(result.message);
+                    toast.error(result.message);
                     navigate("/");
                 }
             } catch (error) {
                 console.error("이슈 상세 정보를 불러오는데 실패했습니다.", error);
-                alert("데이터 로딩 중 오류가 발생했습니다.");
+                toast.error("데이터 로딩 중 오류가 발생했습니다.");
                 navigate("/");
             } finally {
                 setIsLoading(false);
@@ -46,9 +48,9 @@ export default function IssueDetailPage() {
         const fetchAllMetadata = async () => {
             try {
                 const [mRes, lRes, miRes] = await Promise.all([
-                    fetch(`${import.meta.env.VITE_API_URL}/api/members`),
-                    fetch(`${import.meta.env.VITE_API_URL}/api/labels`),
-                    fetch(`${import.meta.env.VITE_API_URL}/api/milestones`)
+                    fetchWithAuth(`${import.meta.env.VITE_API_URL}/api/members`),
+                    fetchWithAuth(`${import.meta.env.VITE_API_URL}/api/labels`),
+                    fetchWithAuth(`${import.meta.env.VITE_API_URL}/api/milestones?state=OPEN`)
                 ]);
 
                 const mResult = await mRes.json();
@@ -56,8 +58,8 @@ export default function IssueDetailPage() {
                 const miResult = await miRes.json();
 
                 if (mResult.success) setAllMembers(mResult.data);
-                if (lResult.success) setAllLabels(lResult.data.labels);
-                if (miResult.success) setAllMilestones(miResult.data);
+                if (lResult.success) setAllLabels(lResult.data.labels || []);
+                if (miResult.success) setAllMilestones(miResult.data.milestones || []);
             } catch (error) {
                 console.error("데이터 로딩 실패:", error);
             }
@@ -77,7 +79,7 @@ export default function IssueDetailPage() {
         if (!window.confirm(confirmMessage)) return;
 
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/issues/${id}`, {
+            const response = await fetchWithAuth(`${import.meta.env.VITE_API_URL}/api/issues/${id}`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json"
@@ -89,11 +91,11 @@ export default function IssueDetailPage() {
             if (result.success) {
                 setIssue(prev => prev ? { ...prev, isOpened: !prev.isOpened } : null);
             } else {
-                alert("상태 변경 실패: " + result.message);
+                toast.error("상태 변경 실패: " + result.message);
             }
         } catch (error) {
             console.error("이슈 상태 변경 중 오류 발생:", error);
-            alert("처리 중 오류가 발생했습니다.");
+            toast.error("처리 중 오류가 발생했습니다.");
         }
     };
 
@@ -101,7 +103,7 @@ export default function IssueDetailPage() {
         if (!window.confirm("정말로 이 이슈를 삭제하시겠습니까?")) return;
 
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/issues/${id}`, {
+            const response = await fetchWithAuth(`${import.meta.env.VITE_API_URL}/api/issues/${id}`, {
                 method: "DELETE"
             });
             const result = await response.json();
@@ -109,11 +111,11 @@ export default function IssueDetailPage() {
             if (result.success) {
                 navigate("/");
             } else {
-                alert("이슈 삭제 실패: " + result.message);
+                toast.error("이슈 삭제 실패: " + result.message);
             }
         } catch (error) {
             console.error("이슈 삭제 중 오류 발생:", error);
-            alert("삭제 처리 중 오류가 발생했습니다.");
+            toast.error("삭제 처리 중 오류가 발생했습니다.");
         }
     };
 
@@ -124,7 +126,7 @@ export default function IssueDetailPage() {
         }
 
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/issues/${id}/title`, {
+            const response = await fetchWithAuth(`${import.meta.env.VITE_API_URL}/api/issues/${id}/title`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json"
@@ -137,11 +139,11 @@ export default function IssueDetailPage() {
                 setIssue(prev => prev ? { ...prev, title: editedTitle } : null);
                 setIsEditingTitle(false);
             } else {
-                alert("제목 수정 실패: " + result.message);
+                toast.error("제목 수정 실패: " + result.message);
             }
         } catch (error) {
             console.error("제목 수정 중 오류 발생:", error);
-            alert("처리 중 오류가 발생했습니다.");
+            toast.error("처리 중 오류가 발생했습니다.");
         }
     };
 
@@ -151,7 +153,7 @@ export default function IssueDetailPage() {
         }
 
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/issues/${id}/contents`, {
+            const response = await fetchWithAuth(`${import.meta.env.VITE_API_URL}/api/issues/${id}/contents`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json"
@@ -163,17 +165,17 @@ export default function IssueDetailPage() {
             if (result.success) {
                 setIssue(prev => prev ? { ...prev, contents: contents } : null);
             } else {
-                alert("본문 수정 실패: " + result.message);
+                toast.error("본문 수정 실패: " + result.message);
             }
         } catch (error) {
             console.error("본문 수정 중 오류 발생:", error);
-            alert("처리 중 오류가 발생했습니다.");
+            toast.error("처리 중 오류가 발생했습니다.");
         }
     };
 
     const handleCommentUpdate = async (commentId: number, contents: string) => {
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/issues/${id}/comments/${commentId}`, {
+            const response = await fetchWithAuth(`${import.meta.env.VITE_API_URL}/api/issues/${id}/comments/${commentId}`, {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json"
@@ -193,17 +195,17 @@ export default function IssueDetailPage() {
                     };
                 });
             } else {
-                alert("댓글 수정 실패: " + result.message);
+                toast.error("댓글 수정 실패: " + result.message);
             }
         } catch (error) {
             console.error("댓글 수정 중 오류 발생:", error);
-            alert("처리 중 오류가 발생했습니다.");
+            toast.error("처리 중 오류가 발생했습니다.");
         }
     };
 
     const handleCommentSubmit = async (contents: string) => {
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/issues/${id}/comments`, {
+            const response = await fetchWithAuth(`${import.meta.env.VITE_API_URL}/api/issues/${id}/comments`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -220,17 +222,17 @@ export default function IssueDetailPage() {
                     commentCount: prev.commentCount + 1
                 } : null);
             } else {
-                alert("댓글 작성 실패: " + result.message);
+                toast.error("댓글 작성 실패: " + result.message);
             }
         } catch (error) {
             console.error("댓글 작성 중 오류 발생:", error);
-            alert("처리 중 오류가 발생했습니다.");
+            toast.error("처리 중 오류가 발생했습니다.");
         }
     };
 
     const handleAssigneesUpdate = async (assigneeIds: number[]) => {
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/issues/${id}/assignees`, {
+            const response = await fetchWithAuth(`${import.meta.env.VITE_API_URL}/api/issues/${id}/assignees`, {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ assigneeIds })
@@ -240,7 +242,7 @@ export default function IssueDetailPage() {
                 const updatedAssignees = allMembers.filter(m => assigneeIds.includes(m.id));
                 setIssue(prev => prev ? { ...prev, assignees: updatedAssignees } : null);
             } else {
-                alert("담당자 수정 실패: " + result.message);
+                toast.error("담당자 수정 실패: " + result.message);
             }
         } catch (error) {
             console.error("담당자 수정 중 오류 발생:", error);
@@ -249,7 +251,7 @@ export default function IssueDetailPage() {
 
     const handleLabelsUpdate = async (labelIds: number[]) => {
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/issues/${id}/labels`, {
+            const response = await fetchWithAuth(`${import.meta.env.VITE_API_URL}/api/issues/${id}/labels`, {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ labelIds })
@@ -259,7 +261,7 @@ export default function IssueDetailPage() {
                 const updatedLabels = allLabels.filter(l => labelIds.includes(l.id));
                 setIssue(prev => prev ? { ...prev, labels: updatedLabels } : null);
             } else {
-                alert("레이블 수정 실패: " + result.message);
+                toast.error("레이블 수정 실패: " + result.message);
             }
         } catch (error) {
             console.error("레이블 수정 중 오류 발생:", error);
@@ -268,7 +270,7 @@ export default function IssueDetailPage() {
 
     const handleMilestoneUpdate = async (milestoneId: number | null) => {
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/issues/${id}/milestone`, {
+            const response = await fetchWithAuth(`${import.meta.env.VITE_API_URL}/api/issues/${id}/milestone`, {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ milestoneId })
@@ -278,7 +280,7 @@ export default function IssueDetailPage() {
                 const updatedMilestone = allMilestones.find(m => m.id === milestoneId) || null;
                 setIssue(prev => prev ? { ...prev, milestone: updatedMilestone } : null);
             } else {
-                alert("마일스톤 수정 실패: " + result.message);
+                toast.error("마일스톤 수정 실패: " + result.message);
             }
         } catch (error) {
             console.error("마일스톤 수정 중 오류 발생:", error);

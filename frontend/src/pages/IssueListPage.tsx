@@ -1,13 +1,14 @@
 // src/pages/IssueListPage.tsx
 import { useState, useEffect, useMemo } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import FilterBar from "../components/issue/FilterBar.tsx";
-import TabNavigation from "../components/TabNavigation.tsx";
-import IssueListHeader from "../components/issue/IssueListHeader.tsx";
-import IssueItem, {type IssueType} from "../components/issue/IssueItem.tsx";
-import IssueSelectionHeader from "../components/issue/IssueSelectionHeader.tsx";
+import FilterBar from "../components/issue/FilterBar";
+import TabNavigation from "../components/TabNavigation";
+import IssueListHeader from "../components/issue/IssueListHeader";
+import IssueItem, {type IssueType} from "../components/issue/IssueItem";
+import IssueSelectionHeader from "../components/issue/IssueSelectionHeader";
 import type { IssueResponse, User, Label, Milestone } from "../types/Issue";
 import { parseFilterString, buildFilterString } from "../utils/filterParser";
+import { fetchWithAuth } from "../utils/api";
 
 export default function IssueListPage() {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -36,9 +37,9 @@ export default function IssueListPage() {
         const fetchMetadata = async () => {
             try {
                 const [membersRes, labelsRes, milestonesOpenRes] = await Promise.all([
-                    fetch(`${import.meta.env.VITE_API_URL}/api/members`),
-                    fetch(`${import.meta.env.VITE_API_URL}/api/labels`),
-                    fetch(`${import.meta.env.VITE_API_URL}/api/milestones?state=OPEN`)
+                    fetchWithAuth(`${import.meta.env.VITE_API_URL}/api/members`),
+                    fetchWithAuth(`${import.meta.env.VITE_API_URL}/api/labels`),
+                    fetchWithAuth(`${import.meta.env.VITE_API_URL}/api/milestones?state=OPEN`)
                 ]);
                 const members = await membersRes.json();
                 const labels = await labelsRes.json();
@@ -87,10 +88,10 @@ export default function IssueListPage() {
 
             try {
                 setIsLoading(true);
-                
+
                 // tokens를 API 파라미터로 변환
                 const params = new URLSearchParams();
-                
+
                 // 파서가 인식한 토큰이 하나라도 있는지 확인 (키워드 입력 여부)
                 const hasAnyToken = Object.keys(tokens).length > 0;
 
@@ -104,12 +105,12 @@ export default function IssueListPage() {
                 if (resolvedTokens.is) {
                     params.append('isOpened', (resolvedTokens.is === 'open').toString());
                 }
-                
+
                 if (resolvedTokens.author) {
                     const author = metadata.members.find(m => m.name === resolvedTokens.author);
                     params.append('authorId', author ? author.id.toString() : '-1');
                 }
-                
+
                 if (resolvedTokens.assignee) {
                     resolvedTokens.assignee.forEach(name => {
                         const member = metadata.members.find(m => m.name === name);
@@ -134,7 +135,7 @@ export default function IssueListPage() {
                     params.append('commentAuthorId', member ? member.id.toString() : '-1');
                 }
 
-                const response = await fetch(`${import.meta.env.VITE_API_URL}/api/issues/filter?${params.toString()}`);
+                const response = await fetchWithAuth(`${import.meta.env.VITE_API_URL}/api/issues/filter?${params.toString()}`);
                 const result: IssueResponse = await response.json();
 
                 if(result.success){
