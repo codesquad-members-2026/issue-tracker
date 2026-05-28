@@ -18,6 +18,7 @@ public interface LabelRepository extends ListCrudRepository<Label, Long> {
             "WHERE il.issue_id IN (:issueIds) AND l.deleted_at IS NULL")
     List<LabelWithIssueId> findAllByIssueIdIn(List<Long> issueIds);
 
+    @Query("SELECT COUNT(*) FROM label WHERE deleted_at IS NULL")
     long countByDeletedAtIsNull();
 
     @Query("SELECT id, name, description, text_color, background_color " +

@@ -16,6 +16,7 @@ interface IssueItemProps {
     issue: IssueType;
     isSelected: boolean; // 추가: 선택 상태
     onToggle: () => void; // 추가: 클릭 핸들러
+    isLast?: boolean; // 추가: 마지막 요소 여부
 }
 
 // 날짜를 상대적 시간(몇 분 전 등)으로 변환하는 헬퍼 함수
@@ -41,12 +42,12 @@ function getRelativeTime(timestamp: string) {
 }
 
 // 오직 '이슈 한 줄'을 그리는 역할만 담당하는 독립적인 모듈입니다.
-export default function IssueItem({ issue, isSelected, onToggle }: IssueItemProps) {
+export default function IssueItem({ issue, isSelected, onToggle, isLast }: IssueItemProps) {
     const { id, status, title, labels, authorName, timestamp, milestoneTitle } = issue;
 
     return (
         // 1. [전체 div] (openIssueInitialCell)
-        <div className="flex items-start w-full h-[96px] bg-[#FEFEFE] border-b border-slate-200 px-8 py-4 hover:bg-slate-50 transition-colors">
+        <div className={`flex items-start w-full h-[96px] bg-[#FEFEFE] border-b border-slate-200 px-8 py-4 hover:bg-slate-50 transition-colors ${isLast ? 'rounded-b-[16px] border-b-0' : ''}`}>
 
             {/* 2. [체크박스] */}
             <div className="mt-1.5">

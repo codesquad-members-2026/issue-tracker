@@ -35,7 +35,7 @@ export default function IssueWritePage() {
                 const [mRes, lRes, miRes] = await Promise.all([
                     fetch(`${import.meta.env.VITE_API_URL}/api/members`),
                     fetch(`${import.meta.env.VITE_API_URL}/api/labels`),
-                    fetch(`${import.meta.env.VITE_API_URL}/api/milestones`)
+                    fetch(`${import.meta.env.VITE_API_URL}/api/milestones?state=OPEN`)
                 ]);
 
                 const mResult = await mRes.json();
@@ -43,8 +43,8 @@ export default function IssueWritePage() {
                 const miResult = await miRes.json();
 
                 if (mResult.success) setAllMembers(mResult.data);
-                if (lResult.success) setAllLabels(lResult.data.labels);
-                if (miResult.success) setAllMilestones(miResult.data);
+                if (lResult.success) setAllLabels(lResult.data.labels || []);
+                if (miResult.success) setAllMilestones(miResult.data.milestones || []);
             } catch (error) {
                 console.error("데이터 로딩 실패:", error);
             }

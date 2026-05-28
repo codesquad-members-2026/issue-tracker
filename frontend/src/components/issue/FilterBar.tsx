@@ -1,27 +1,39 @@
 // src/components/FilterBar.tsx
 // import { useState, KeyboardEvent } from 'react';
 
-import { useState, type KeyboardEvent } from 'react';
+import { useState, useEffect, type KeyboardEvent } from 'react';
 
 interface FilterBarProps {
-    // 검색어가 제출되었을 때 실행될 콜백 함수 (추후 IssueListPage에서 처리)
+    initialSearchText: string;
     onSearchSubmit?: (searchText: string) => void;
 }
 
-export default function FilterBar({ onSearchSubmit }: FilterBarProps) {
+const FILTER_OPTIONS = [
+    { label: '열린 이슈', query: 'is:open' },
+    { label: '내가 작성한 이슈', query: 'is:open author:@me' }, // @me는 세션 유저명으로 치환됨
+    { label: '나에게 할당된 이슈', query: 'is:open assignee:@me' },
+    { label: '내가 댓글을 남긴 이슈', query: 'is:open mentions:@me' },
+    { label: '닫힌 이슈', query: 'is:closed' }
+];
+
+export default function FilterBar({ initialSearchText, onSearchSubmit }: FilterBarProps) {
     const [isPopupOpen, setIsPopupOpen] = useState(false);
+
+    // 1. 검색바 입력값을 관리할 상태 추가 (props와 동기화)
+    const [searchText, setSearchText] = useState(initialSearchText);
     const [selectedFilter, setSelectedFilter] = useState('열린 이슈');
 
-    // 1. 검색바 입력값을 관리할 상태 추가
-    const [searchText, setSearchText] = useState('state:open');
-
-    const filterOptions = [
-        '열린 이슈',
-        '내가 작성한 이슈',
-        '나에게 할당된 이슈',
-        '내가 댓글을 남긴 이슈',
-        '닫힌 이슈'
-    ];
+    useEffect(() => {
+        setSearchText(initialSearchText);
+        
+        // 검색어와 일치하는 필터 옵션 찾기
+        const matchingOption = FILTER_OPTIONS.find(opt => opt.query === initialSearchText);
+        if (matchingOption) {
+            setSelectedFilter(matchingOption.label);
+        } else {
+            setSelectedFilter(''); // 커스텀 검색어인 경우 선택 해제
+        }
+    }, [initialSearchText]);
 
     const togglePopup = () => setIsPopupOpen(!isPopupOpen);
     const closePopup = () => setIsPopupOpen(false);
@@ -93,21 +105,22 @@ export default function FilterBar({ onSearchSubmit }: FilterBarProps) {
                         </div>
 
                         <div className="flex flex-col gap-[1px]">
-                            {filterOptions.map((option) => {
-                                const isSelected = selectedFilter === option;
+                            {FILTER_OPTIONS.map((option) => {
+                                const isSelected = selectedFilter === option.label;
                                 return (
                                     <button
-                                        key={option}
+                                        key={option.label}
                                         onClick={() => {
-                                            setSelectedFilter(option);
-                                            // // 필터 선택 시 검색바 텍스트를 해당 필터 조건으로 업데이트할 수도 있습니다.
-                                            // setSearchText(`is:issue is:${option === '열린 이슈' ? 'open' : 'closed'}`);
+                                            setSelectedFilter(option.label);
+                                            if (onSearchSubmit) {
+                                                onSearchSubmit(option.query);
+                                            }
                                             closePopup();
                                         }}
                                         className="w-full h-[44px] px-4 py-2 bg-[#FEFEFE] hover:bg-[#F7F7FC] flex items-center justify-between transition-colors cursor-pointer"
                                     >
                                         <span className={`text-[16px] leading-6 text-[#14142B] font-['Pretendard_Variable'] ${isSelected ? 'font-bold' : 'font-medium'}`}>
-                                            {option}
+                                            {option.label}
                                         </span>
                                         <svg className="w-4 h-4 text-[#4E4B66]" viewBox="0 0 16 16" fill="none">
                                             <circle cx="8" cy="8" r="7.2" stroke="currentColor" strokeWidth="1.6"/>
