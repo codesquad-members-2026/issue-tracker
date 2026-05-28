@@ -1,14 +1,25 @@
-// src/Header.tsx
+// src/components/Header.tsx
 import { Link, useNavigate } from "react-router-dom";
+import { fetchWithAuth } from "../utils/api.ts";
 
 export default function Header() {
     const navigate = useNavigate();
 
-    const handleLogout = () => {
-        // 1. 로컬 스토리지에서 토큰 삭제
-        localStorage.removeItem('accessToken');
-        // 2. 로그인 페이지로 튕겨내기
-        navigate('/login', { replace: true });
+    const handleLogout = async () => {
+        try {
+            // 백엔드 로그아웃 API 호출 (DB에서 RT 삭제 및 쿠키 만료)
+            await fetchWithAuth(`${import.meta.env.VITE_API_URL}/api/auth/logout`, {
+                method: 'POST',
+                credentials: 'include',
+            });
+        } catch (error) {
+            console.error('로그아웃 요청 실패:', error);
+        } finally {
+            // 1. 로컬 스토리지에서 토큰 삭제 (API 성공 여부와 관계없이 프론트엔드에서는 로그아웃 처리)
+            localStorage.removeItem('accessToken');
+            // 2. 로그인 페이지로 튕겨내기
+            navigate('/login', { replace: true });
+        }
     };
 
     return (

@@ -92,7 +92,9 @@ public class AuthController {
         ResponseCookie cookie = ResponseCookie.from("refreshToken", "")
                 .maxAge(0)
                 .path("/")
+                .secure(false)
                 .httpOnly(true)
+                .sameSite("Lax")
                 .build();
 
         response.addHeader("Set-Cookie", cookie.toString());

@@ -26,6 +26,7 @@ export default function AuthCallbackPage() {
                     headers: {
                         'Content-Type': 'application/json',
                     },
+                    credentials: 'include',
                     body: JSON.stringify({ code }),
                 });
 
