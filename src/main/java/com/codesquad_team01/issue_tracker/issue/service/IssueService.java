@@ -3,6 +3,7 @@ package com.codesquad_team01.issue_tracker.issue.service;
 import com.codesquad_team01.issue_tracker.issue.domain.Issue;
 import com.codesquad_team01.issue_tracker.issue.domain.IssueStatus;
 import com.codesquad_team01.issue_tracker.issue.dto.mapper.IssueDtoMapper;
+import com.codesquad_team01.issue_tracker.issue.dto.request.IssueFilterRequest;
 import com.codesquad_team01.issue_tracker.issue.dto.response.IssueListResponse;
 import com.codesquad_team01.issue_tracker.issue.dto.response.IssueResponse;
 import com.codesquad_team01.issue_tracker.issue.repository.IssueRepository;
@@ -89,7 +90,32 @@ public class IssueService {
         List<IssueResponse> issueResponses = issueDtoMapper.toIssueResponses(issues);
 
         return new IssueListResponse(metadata, issueResponses);
+    }
 
+    @Transactional(readOnly = true)
+    public IssueListResponse getFilteredIssueList(IssueFilterRequest  request) {
+        IssueListResponse.Metadata metadata = createMetadata();
+
+        List<Long> filteredIssueIds = issueRepository.findByFilterCondition(request);
+
+        if(filteredIssueIds.isEmpty()) {
+            return new IssueListResponse(metadata, List.of());
+        }
+
+        Iterable<Issue> issuesIterable = issueRepository.findAllById(filteredIssueIds);
+        List<Issue> filteredIssues = new java.util.ArrayList<>();
+        issuesIterable.forEach(filteredIssues::add);
+
+        // 정렬 순서를 유지하기 위해 ID 순서대로 재정렬합니다.
+        java.util.Map<Long, Integer> idOrder = new java.util.HashMap<>();
+        for (int i = 0; i < filteredIssueIds.size(); i++) {
+            idOrder.put(filteredIssueIds.get(i), i);
+        }
+        filteredIssues.sort(java.util.Comparator.comparingInt(issue -> idOrder.get(issue.getId())));
+
+        List<IssueResponse> issueResponses = issueDtoMapper.toIssueResponses(filteredIssues);
+
+        return new IssueListResponse(metadata, issueResponses);
     }
 
     private IssueListResponse.Metadata createMetadata() {
