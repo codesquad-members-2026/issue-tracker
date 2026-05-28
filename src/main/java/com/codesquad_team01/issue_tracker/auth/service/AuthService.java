@@ -74,7 +74,7 @@ public class AuthService {
         Member newMember = new Member(
                 null,
                 profile.login(),
-                profile.name(),
+                profile.name() == null ? profile.login() : profile.name(),
                 null,
                 null,
                 profile.oauthId(),

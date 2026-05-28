@@ -12,8 +12,11 @@ export const fetchWithAuth = async (url: string, options: RequestInit = {}) => {
         headers.set('Authorization', `Bearer ${accessToken}`);
     }
     
-    // JSON 요청인 경우 Content-Type 설정 (따로 설정되지 않은 경우만)
-    if (!headers.has('Content-Type') && (options.method === 'POST' || options.method === 'PUT' || options.method === 'PATCH')) {
+    // JSON 요청인 경우 Content-Type 설정 (따로 설정되지 않은 경우만, FormData인 경우는 브라우저가 자동으로 설정하게 둠)
+    if (!headers.has('Content-Type') && 
+        (options.method === 'POST' || options.method === 'PUT' || options.method === 'PATCH') &&
+        !(options.body instanceof FormData)
+    ) {
         headers.set('Content-Type', 'application/json');
     }
 
