@@ -53,4 +53,8 @@ jobs:
               -e DB_URL='${{ secrets.DB_URL }}' \
               -e DB_USERNAME='${{ secrets.DB_USERNAME }}' \
               -e DB_PASSWORD='${{ secrets.DB_PASSWORD }}' \
+              -e OAUTH_CLIENT_ID='${{ secrets.OAUTH_CLIENT_ID }}' \
+              -e OAUTH_CLIENT_SECRET='${{ secrets.OAUTH_CLIENT_SECRET }}' \
+              -e OAUTH_REDIRECT_URI='${{ secrets.OAUTH_REDIRECT_URI }}' \
+              -e JWT_SECRET_KEY='${{ secrets.JWT_SECRET_KEY }}' \
               ${{ secrets.DOCKER_USERNAME }}/issue-tracker:latest

@@ -31,6 +31,8 @@ jobs:
       - name: Create Production Environment Variables
         run: |
           echo "VITE_API_URL=${{ secrets.VITE_API_URL }}" > .env.production
+          echo "VITE_GITHUB_CLIENT_ID=${{ secrets.OAUTH_CLIENT_ID }}" >> .env.production
+          echo "VITE_GITHUB_REDIRECT_URI=${{ secrets.OAUTH_REDIRECT_URI }}" >> .env.production
           
       - name: Build Frontend
         run: npm run build
