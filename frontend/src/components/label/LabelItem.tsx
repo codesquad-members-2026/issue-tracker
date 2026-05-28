@@ -2,14 +2,7 @@
 import Badge from "../Badge.tsx";
 import LabelDescription from "./LabelDescription.tsx";
 import ActionButtons from "./ActionButtons.tsx";
-
-interface Label {
-    id: number;
-    name: string;
-    description: string;
-    textColor: string;
-    backgroundColor: string;
-}
+import type { Label } from "../../types/Issue";
 
 interface LabelItemProps {
     label: Label;

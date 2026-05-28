@@ -1,16 +1,6 @@
 // src/IssueItem.tsx
 import { Link } from "react-router-dom";
-
-// 나중에 App.tsx에서 쓸 데이터 타입(구조)도 여기서 한 번에 정의해 주면 좋습니다.
-export interface IssueType {
-    id: number;
-    status: string;
-    title: string;
-    labels: { text: string; color: string }[];
-    authorName: string;
-    timestamp: string;
-    milestoneTitle: string | null;
-}
+import type { IssueType } from "../../types/Issue";
 
 interface IssueItemProps {
     issue: IssueType;
@@ -84,10 +74,16 @@ export default function IssueItem({ issue, isSelected, onToggle, isLast }: Issue
                     {labels.map((label) => (
                         <div
                             key={label.text}
-                            className="flex items-center justify-center h-6 px-2 rounded-[12px] border border-[#D9DBE9] bg-[#FEFEFE]"
+                            className="flex items-center justify-center h-6 px-2 rounded-[12px] border border-[#D9DBE9]"
+                            style={{ backgroundColor: label.color }}
                         >
                             {/* [라벨 Text] */}
-                            <span className="font-['Pretendard'] text-[12px] font-medium text-[#6E7191] leading-[16px] text-center">{label.text}</span>
+                            <span
+                                className="font-['Pretendard'] text-[12px] font-medium leading-[16px] text-center"
+                                style={{ color: label.textColor }}
+                            >
+                                {label.text}
+                            </span>
                         </div>
                     ))}
                 </div>

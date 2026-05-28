@@ -2,16 +2,7 @@
 import MilestoneProgress from "./MilestoneProgress.tsx";
 import ActionButtons from "./ActionButtons.tsx";
 import { COLORS } from "../../utils/color";
-
-interface Milestone {
-    id: number;
-    name: string;
-    description: string;
-    completionDate: string;
-    isOpened: boolean;
-    openIssueNum: number;
-    closedIssueNum: number;
-}
+import type { Milestone } from "../../types/Issue";
 
 interface MilestoneItemProps {
     milestone: Milestone;
@@ -21,8 +12,10 @@ interface MilestoneItemProps {
 }
 
 export default function MilestoneItem({ milestone, onToggleStatus, onEdit, onDelete }: MilestoneItemProps) {
-    const totalIssues = milestone.openIssueNum + milestone.closedIssueNum;
-    const percentage = totalIssues > 0 ? Math.round((milestone.closedIssueNum / totalIssues) * 100) : 0;
+    const openCount = milestone.openIssueNum || 0;
+    const closedCount = milestone.closedIssueNum || 0;
+    const totalIssues = openCount + closedCount;
+    const percentage = totalIssues > 0 ? Math.round((closedCount / totalIssues) * 100) : 0;
 
     return (
         <div className="flex items-center justify-between px-8 py-6 bg-white border-t border-slate-200 first:border-t-0 hover:bg-slate-50 transition-colors">
@@ -50,15 +43,15 @@ export default function MilestoneItem({ milestone, onToggleStatus, onEdit, onDel
             {/* 우측: 진행률 및 액션 */}
             <div className="flex flex-col items-end gap-4 shrink-0">
                 <ActionButtons 
-                    isOpened={milestone.isOpened}
+                    isOpened={milestone.isOpened || false}
                     onToggleStatus={onToggleStatus}
                     onEdit={onEdit}
                     onDelete={onDelete}
                 />
                 <MilestoneProgress 
                     percentage={percentage}
-                    openCount={milestone.openIssueNum}
-                    closedCount={milestone.closedIssueNum}
+                    openCount={openCount}
+                    closedCount={closedCount}
                 />
             </div>
         </div>

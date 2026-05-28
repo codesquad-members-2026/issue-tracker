@@ -6,7 +6,7 @@ import { getRandomColor, getContrastColor } from "../../utils/color.ts";
 interface LabelData {
     id?: number;
     name: string;
-    description: string;
+    description?: string;
     backgroundColor: string;
     textColor: string;
 }

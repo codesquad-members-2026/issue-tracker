@@ -4,9 +4,9 @@ import { Link, useSearchParams } from "react-router-dom";
 import FilterBar from "../components/issue/FilterBar";
 import TabNavigation from "../components/TabNavigation";
 import IssueListHeader from "../components/issue/IssueListHeader";
-import IssueItem, {type IssueType} from "../components/issue/IssueItem";
+import IssueItem from "../components/issue/IssueItem";
 import IssueSelectionHeader from "../components/issue/IssueSelectionHeader";
-import type { IssueResponse, User, Label, Milestone } from "../types/Issue";
+import type { IssueListResponse, User, Label, Milestone, IssueType } from "../types/Issue";
 import { parseFilterString, buildFilterString } from "../utils/filterParser";
 import { fetchWithAuth } from "../utils/api";
 
@@ -69,10 +69,23 @@ export default function IssueListPage() {
 
     const tokens = useMemo(() => parseFilterString(q), [q]);
 
-    // '@me'를 현재 로그인한 유저('완자')로 치환한 토큰 생성
+    // '@me'를 현재 로그인한 유저의 name으로 치환한 토큰 생성
     const resolvedTokens = useMemo(() => {
-        const resolveMe = (val?: string) => val === '@me' ? '완자' : val;
-        const resolveMeArray = (arr?: string[]) => arr?.map(val => val === '@me' ? '완자' : val);
+        const storedUser = localStorage.getItem('user');
+        const currentUser = storedUser ? JSON.parse(storedUser) : null;
+        const currentId = currentUser?.id;
+
+        const resolveMe = (val?: string) => {
+            if (val !== '@me') return val;
+            const me = metadata.members.find(m => m.id === currentId);
+            return me ? me.name : val;
+        };
+
+        const resolveMeArray = (arr?: string[]) => arr?.map(val => {
+            if (val !== '@me') return val;
+            const me = metadata.members.find(m => m.id === currentId);
+            return me ? me.name : val;
+        });
 
         return {
             ...tokens,
@@ -80,7 +93,7 @@ export default function IssueListPage() {
             assignee: resolveMeArray(tokens.assignee),
             commentAuthor: resolveMe(tokens.commentAuthor),
         };
-    }, [tokens]);
+    }, [tokens, metadata.members]);
 
     useEffect(() => {
         const fetchIssues = async () => {
@@ -136,7 +149,7 @@ export default function IssueListPage() {
                 }
 
                 const response = await fetchWithAuth(`${import.meta.env.VITE_API_URL}/api/issues/filter?${params.toString()}`);
-                const result: IssueResponse = await response.json();
+                const result: IssueListResponse = await response.json();
 
                 if(result.success){
                     const mappedIssues: IssueType[] = result.data.issues.map((apiIssue) => ({
@@ -145,7 +158,8 @@ export default function IssueListPage() {
                         title: apiIssue.title,
                         labels: apiIssue.labels.map(label => ({
                             text: label.name,
-                            color: label.backgroundColor
+                            color: label.backgroundColor,
+                            textColor: label.textColor
                         })),
                         authorName: apiIssue.author.name,
                         timestamp: apiIssue.createdAt,

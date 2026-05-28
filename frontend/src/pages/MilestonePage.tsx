@@ -7,24 +7,7 @@ import MilestoneListHeader from "../components/milestone/MilestoneListHeader";
 import MilestoneItem from "../components/milestone/MilestoneItem";
 import MilestoneForm from "../components/milestone/MilestoneForm";
 import { fetchWithAuth } from "../utils/api";
-
-// --- Types ---
-interface Milestone {
-    id: number;
-    name: string;
-    description: string;
-    completionDate: string;
-    isOpened: boolean;
-    openIssueNum: number;
-    closedIssueNum: number;
-}
-
-interface MilestoneListResponse {
-    success: boolean;
-    data: {
-        milestones: Milestone[];
-    };
-}
+import type { Milestone, MilestoneListResponse } from "../types/Issue";
 
 export default function MilestonePage() {
     const [milestones, setMilestones] = useState<Milestone[]>([]);
@@ -97,7 +80,7 @@ export default function MilestonePage() {
     };
 
     // 3. 저장 (생성/수정)
-    const handleSave = async (data: { name: string; description: string; completionDate: string }) => {
+    const handleSave = async (data: { name: string; description?: string; completionDate?: string }) => {
         const isEdit = !!editingId;
         const url = isEdit ? `${import.meta.env.VITE_API_URL}/api/milestones/${editingId}` : `${import.meta.env.VITE_API_URL}/api/milestones`;
         const method = isEdit ? "PATCH" : "POST";
