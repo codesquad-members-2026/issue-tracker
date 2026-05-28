@@ -2,7 +2,7 @@
  * 인증 토큰을 자동으로 포함하여 API 요청을 보내는 공통 함수
  */
 export const fetchWithAuth = async (url: string, options: RequestInit = {}) => {
-    let accessToken = localStorage.getItem('accessToken');
+    const accessToken = localStorage.getItem('accessToken');
     
     // 기본 헤더 설정
     const headers = new Headers(options.headers || {});
@@ -57,7 +57,7 @@ export const fetchWithAuth = async (url: string, options: RequestInit = {}) => {
             // Refresh API 응답이 ok가 아니거나 토큰이 없는 경우 (RT도 만료/삭제됨)
             throw new Error('Refresh Token is invalid or expired.');
 
-        } catch (error) {
+        } catch {
             // 4. 재발급 실패 시: 완전한 로그아웃 상태로 간주
             console.warn('인증이 만료되었습니다. 다시 로그인해 주세요.');
             localStorage.removeItem('accessToken');
