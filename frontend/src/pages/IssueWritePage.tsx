@@ -5,8 +5,6 @@ import { useNavigate } from "react-router-dom";
 import ListFilterDropdown from "../components/issue/ListFilterDropdown";
 import { useImageUpload } from "../hooks/useImageUpload";
 import { fetchWithAuth } from "../utils/api.ts";
-import ListFilterDropdown from "../components/issue/ListFilterDropdown";
-import { useImageUpload } from "../hooks/useImageUpload";
 
 // 데이터 타입 정의
 interface Member { id: number; name: string; }
