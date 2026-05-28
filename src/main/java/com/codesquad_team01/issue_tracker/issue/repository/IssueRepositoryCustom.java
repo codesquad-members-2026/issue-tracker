@@ -6,5 +6,5 @@ import com.codesquad_team01.issue_tracker.issue.dto.request.IssueFilterRequest;
 import java.util.List;
 
 public interface IssueRepositoryCustom {
-    List<Issue> findByFilterCondition(IssueFilterRequest issueFilterRequest);
+    List<Long> findByFilterCondition(IssueFilterRequest issueFilterRequest);
 }

@@ -96,11 +96,22 @@ public class IssueService {
     public IssueListResponse getFilteredIssueList(IssueFilterRequest  request) {
         IssueListResponse.Metadata metadata = createMetadata();
 
-        List<Issue> filteredIssues = issueRepository.findByFilterCondition(request);
+        List<Long> filteredIssueIds = issueRepository.findByFilterCondition(request);
 
-        if(filteredIssues.isEmpty()) {
+        if(filteredIssueIds.isEmpty()) {
             return new IssueListResponse(metadata, List.of());
         }
+
+        Iterable<Issue> issuesIterable = issueRepository.findAllById(filteredIssueIds);
+        List<Issue> filteredIssues = new java.util.ArrayList<>();
+        issuesIterable.forEach(filteredIssues::add);
+
+        // 정렬 순서를 유지하기 위해 ID 순서대로 재정렬합니다.
+        java.util.Map<Long, Integer> idOrder = new java.util.HashMap<>();
+        for (int i = 0; i < filteredIssueIds.size(); i++) {
+            idOrder.put(filteredIssueIds.get(i), i);
+        }
+        filteredIssues.sort(java.util.Comparator.comparingInt(issue -> idOrder.get(issue.getId())));
 
         List<IssueResponse> issueResponses = issueDtoMapper.toIssueResponses(filteredIssues);
 

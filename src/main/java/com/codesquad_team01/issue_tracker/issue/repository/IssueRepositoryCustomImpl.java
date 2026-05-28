@@ -16,10 +16,9 @@ public class IssueRepositoryCustomImpl implements IssueRepositoryCustom {
     private final NamedParameterJdbcTemplate jdbcTemplate;
 
     @Override
-    public List<Issue> findByFilterCondition(IssueFilterRequest condition) {
+    public List<Long> findByFilterCondition(IssueFilterRequest condition) {
         StringBuilder sql = new StringBuilder(
-                "SELECT i.* FROM issue i WHERE i.deleted_at IS NULL ");
-
+                "SELECT i.id FROM issue i WHERE i.deleted_at IS NULL ");
         MapSqlParameterSource params = new MapSqlParameterSource();
 
         if (condition.isOpened() != null) {
@@ -57,7 +56,6 @@ public class IssueRepositoryCustomImpl implements IssueRepositoryCustom {
         }
         sql.append("ORDER BY i.created_at DESC");
 
-        return jdbcTemplate.query(sql.toString(), params, new DataClassRowMapper<>(Issue.class));
-
+        return jdbcTemplate.queryForList(sql.toString(), params, Long.class);
     }
 }
