@@ -46,7 +46,6 @@ public class AuthService {
 
         return handleLoginResult(member);
     }
-
     @Transactional
     public LoginResult githubLogin(String code) {
         String accessToken = githubOauthClient.getAccessToken(code);
@@ -102,5 +101,23 @@ public class AuthService {
         );
 
         memberRepository.save(newMember);
+    }
+
+    public String refreshAccessToken(String refreshToken){
+        Long memberId;
+        try {
+            memberId = jwtProvider.getMemberIdFromToken(refreshToken);
+        } catch (Exception e) {
+            throw new IssueTrackerException(ErrorCode.INVALID_TOKEN);
+        }
+
+        authRepository.findByToken(refreshToken)
+                .orElseThrow(() -> new IssueTrackerException(ErrorCode.INVALID_TOKEN));
+
+        return jwtProvider.createAccessToken(memberId);
+    }
+
+    public void logout(Long memberId){
+        authRepository.deleteByMemberId(memberId);
     }
 }

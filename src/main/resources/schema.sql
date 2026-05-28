@@ -96,8 +96,7 @@ CREATE TABLE `issue_label` (
 CREATE TABLE `refresh_token`(
     `id` bigint PRIMARY KEY AUTO_INCREMENT,
     `member_id` bigint NOT NULL,
-    `token` varchar(512) NOT NULL,
-    `created_at` datetime DEFAULT CURRENT_TIMESTAMP
+    `token` varchar(512) NOT NULL
 )
 
 -- 유니크 인덱스 (중복 할당 방지)

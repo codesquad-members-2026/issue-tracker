@@ -8,14 +8,13 @@ import com.codesquad_team01.issue_tracker.auth.dto.response.LoginResponse;
 import com.codesquad_team01.issue_tracker.auth.dto.response.LoginResult;
 import com.codesquad_team01.issue_tracker.auth.service.AuthService;
 import com.codesquad_team01.issue_tracker.global.dto.ApiResponse;
+import com.codesquad_team01.issue_tracker.global.exception.ErrorCode;
+import com.codesquad_team01.issue_tracker.global.exception.IssueTrackerException;
 import com.codesquad_team01.issue_tracker.member.dto.response.MemberLoginResponse;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseCookie;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -68,5 +67,36 @@ public class AuthController {
     public ApiResponse<Void> signup (@Valid @RequestBody SignupRequest signupRequest){
         authService.signup(signupRequest);
         return ApiResponse.success("회원가입이 완료됐습니다!", null);
+    }
+
+    @PostMapping("/refresh")
+    public ApiResponse<JwtTokenResponse> refresh(
+            @CookieValue(value = "refreshToken", required = false) String refreshToken
+    ){
+        if(refreshToken == null){
+            throw new IssueTrackerException(ErrorCode.NOT_FOUND_TOKEN);
+        }
+
+        String newAccessToken = authService.refreshAccessToken(refreshToken);
+        return ApiResponse.success("토큰 재발급 성공", new JwtTokenResponse(newAccessToken));
+    }
+
+    @PostMapping("/logout")
+    public ApiResponse<Void> logout(
+            @RequestAttribute("memberId") Long memberId,
+            HttpServletResponse response
+    ){
+
+        authService.logout(memberId);
+
+        ResponseCookie cookie = ResponseCookie.from("refreshToken", "")
+                .maxAge(0)
+                .path("/")
+                .httpOnly(true)
+                .build();
+
+        response.addHeader("Set-Cookie", cookie.toString());
+
+        return ApiResponse.success("로그아웃 성공", null);
     }
 }
