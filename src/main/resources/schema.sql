@@ -8,6 +8,7 @@ DROP TABLE IF EXISTS `issue`;
 DROP TABLE IF EXISTS `label`;
 DROP TABLE IF EXISTS `milestone`;
 DROP TABLE IF EXISTS `member`;
+DROP TABLE IF EXISTS `refresh_token`;
 SET FOREIGN_KEY_CHECKS = 1;
 
 -- 1. 회원 정보
@@ -97,7 +98,7 @@ CREATE TABLE `refresh_token`(
     `id` bigint PRIMARY KEY AUTO_INCREMENT,
     `member_id` bigint NOT NULL,
     `token` varchar(512) NOT NULL
-)
+);
 
 -- 유니크 인덱스 (중복 할당 방지)
 CREATE UNIQUE INDEX `assignee_index_0` ON `assignee` (`issue_id`, `member_id`);
