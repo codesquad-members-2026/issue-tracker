@@ -1,4 +1,4 @@
--- 외래 키 제크 잠시 해제 (테이블 삭제 순서 상관없이 깔끔하게 지우기 위함)
+-- 외래 키 체크 잠시 해제 (테이블 삭제 순서 상관없이 깔끔하게 지우기 위함)
 SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS `issue_label`;
 DROP TABLE IF EXISTS `assignee`;
@@ -8,15 +8,20 @@ DROP TABLE IF EXISTS `issue`;
 DROP TABLE IF EXISTS `label`;
 DROP TABLE IF EXISTS `milestone`;
 DROP TABLE IF EXISTS `member`;
+DROP TABLE IF EXISTS `refresh_token`;
 SET FOREIGN_KEY_CHECKS = 1;
 
 -- 1. 회원 정보
 CREATE TABLE `member` (
                            `id` bigint PRIMARY KEY AUTO_INCREMENT,
+
                            `user_id` varchar(50) UNIQUE NOT NULL,
-                           `name` varchar(50) NOT NULL,
-                           `password` varchar(255) NOT NULL,
-                           `email` varchar(255) NOT NULL,
+                           `name` varchar(50) NULL,
+                           `email` varchar(255) NULL,
+
+                           `password` varchar(255) NULL,
+                           `oauth_id` bigint UNIQUE,
+
                            `deleted_at` datetime DEFAULT NULL -- 기본값 NULL로 수정
 );
 
@@ -48,7 +53,7 @@ CREATE TABLE `issue` (
                           `milestone_id` bigint,
                           `author_id` bigint NOT NULL,
                           `is_opened` boolean DEFAULT true,
-                          `created_at` datetime DEFAULT (now()),
+                          `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
                           `deleted_at` datetime DEFAULT NULL -- 기본값 NULL로 수정
 );
 
@@ -58,7 +63,7 @@ CREATE TABLE `comment` (
                             `issue_id` bigint NOT NULL,
                             `author_id` bigint NOT NULL,
                             `contents` text NOT NULL,
-                            `created_at` datetime DEFAULT (now()),
+                            `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
                             `deleted_at` datetime DEFAULT NULL -- 삭제 관리 위해 추가
 );
 
@@ -71,7 +76,7 @@ CREATE TABLE `attachment` (
                                `file_url` varchar(512) NOT NULL,
                                `file_size` bigint,
                                `content_type` varchar(50),
-                               `created_at` datetime DEFAULT (now())
+                               `created_at` datetime DEFAULT CURRENT_TIMESTAMP
 );
 
 -- 7. 이슈 담당자 (연결 테이블 - 전략 2 적용)
@@ -86,6 +91,13 @@ CREATE TABLE `issue_label` (
                                 `id` bigint PRIMARY KEY AUTO_INCREMENT, -- 대리키
                                 `issue_id` bigint NOT NULL,
                                 `label_id` bigint NOT NULL
+);
+
+-- 9. 리프레쉬 토큰
+CREATE TABLE `refresh_token`(
+    `id` bigint PRIMARY KEY AUTO_INCREMENT,
+    `member_id` bigint NOT NULL,
+    `token` varchar(512) NOT NULL
 );
 
 -- 유니크 인덱스 (중복 할당 방지)
@@ -103,3 +115,4 @@ ALTER TABLE `assignee` ADD FOREIGN KEY (`issue_id`) REFERENCES `issue` (`id`) ON
 ALTER TABLE `assignee` ADD FOREIGN KEY (`member_id`) REFERENCES `member` (`id`);
 ALTER TABLE `issue_label` ADD FOREIGN KEY (`issue_id`) REFERENCES `issue` (`id`) ON DELETE CASCADE;
 ALTER TABLE `issue_label` ADD FOREIGN KEY (`label_id`) REFERENCES `label` (`id`);
+ALTER TABLE `refresh_token` ADD FOREIGN KEY (`member_id`) REFERENCES `member` (`id`) ON DELETE CASCADE;

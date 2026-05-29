@@ -1,16 +1,50 @@
 package com.codesquad_team01.issue_tracker.global;
 
+import com.codesquad_team01.issue_tracker.auth.JwtInterceptor;
+import com.codesquad_team01.issue_tracker.auth.LoginMemberArgumentResolver;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import java.util.List;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
+
+    private final JwtInterceptor jwtInterceptor;
+    private final LoginMemberArgumentResolver loginMemberArgumentResolver;
+
+    public WebConfig(JwtInterceptor jwtInterceptor, LoginMemberArgumentResolver loginMemberArgumentResolver) {
+        this.jwtInterceptor = jwtInterceptor;
+        this.loginMemberArgumentResolver = loginMemberArgumentResolver;
+    }
+
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("http://localhost:5173")
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH")
-                .allowCredentials(true); // TODO: 추후 JWT를 로컬 스토리지에 두고 헤더에 직접 넣는 방식을 채택할 경우 .allowedHeaders("Authorization")을 추가로 열어야 함 -> 그때가서 공부
+                .allowedOrigins(
+                        "http://localhost:5173",
+                        "http://team01-issue-tracker-frontend-deploy.s3-website.ap-northeast-2.amazonaws.com")
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")
+                .allowCredentials(true);
+    }
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(jwtInterceptor)
+                .addPathPatterns("/api/**")
+                .excludePathPatterns(
+                        "/api/auth/login",
+                        "/api/auth/login/github",
+                        "/api/auth/signup",
+                        "/api/auth/refresh"
+                );
+    }
+
+    @Override
+    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
+        resolvers.add(loginMemberArgumentResolver);
     }
 }

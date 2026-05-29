@@ -76,6 +76,6 @@
 
 ---
 
-## 🏗️ ERD (Entity Relationship Diagram
+## 🏗️ ERD (Entity Relationship Diagram)
 ### **_자료형은 추후에 지정할 예정_**
 ![Project ERD](./images/ERD.png)
