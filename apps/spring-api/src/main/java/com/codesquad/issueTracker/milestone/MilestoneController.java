@@ -1,10 +1,7 @@
 package com.codesquad.issueTracker.milestone;
 
 import com.codesquad.issueTracker.common.response.ApiResponse;
-import com.codesquad.issueTracker.milestone.dto.MilestoneListResponse;
-import com.codesquad.issueTracker.milestone.dto.MilestoneRequest;
-import com.codesquad.issueTracker.milestone.dto.MilestoneResponse;
-import com.codesquad.issueTracker.milestone.dto.MilestoneStatusUpdateRequest;
+import com.codesquad.issueTracker.milestone.dto.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -26,16 +22,15 @@ public class MilestoneController {
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(newMilestone.id())
+                .build()
                 .toUri();
 
         return ResponseEntity.created(location).body(ApiResponse.ok(newMilestone));
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse<MilestoneListResponse>> getMilestoneList(){
-        MilestoneListResponse milestones = service.getAllMilestones();
+    public ResponseEntity<ApiResponse<MilestoneListResponse>> getMilestoneList(@RequestParam(defaultValue = "OPEN") MilestoneStatus status){
+        MilestoneListResponse milestones = service.getAllMilestonesByStatus(status);
         return ResponseEntity.ok(ApiResponse.ok(milestones));
     }
 

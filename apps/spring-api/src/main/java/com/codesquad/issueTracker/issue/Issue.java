@@ -11,13 +11,13 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.MappedCollection;
 import org.springframework.data.relational.core.mapping.Table;
 
-@Table("ISSUES")
+@Table("issues")
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Issue {
     @Id
-    private Long issueNumber;
+    private Long id;
     private Long authorId;
     private String title;
     private IssueStatus status;
@@ -25,6 +25,38 @@ public class Issue {
     private LocalDateTime createdAt;
     private Long milestoneId;
 
-    @MappedCollection(idColumn = "ISSUE_NUMBER")
+    @MappedCollection(idColumn = "issue_id")
     private Set<IssueLabel> labels = new HashSet<>();
+
+    @MappedCollection(idColumn = "issue_id")
+    private Set<IssueUser> users = new HashSet<>();
+
+
+    public void assignUser(Long userId){
+        this.users.add(new IssueUser(userId));
+    }
+
+    public void unassignUser(Long userId){
+        this.users.removeIf(issueUser -> issueUser.userId().equals(userId));
+    }
+
+    public void assignLabel(Long labelId){
+        this.labels.add(new IssueLabel(labelId));
+    }
+
+    public void unassignLabel(Long labelId){
+        this.labels.removeIf(label -> label.labelId().equals(labelId));
+    }
+
+    public void updateMilestone(Long milestoneId){
+        this.milestoneId = milestoneId;
+    }
+
+    public void updateTitle(String title) {
+        this.title = title;
+    }
+
+    public void changeStatus(IssueStatus status) {
+        this.status = status;
+    }
 }

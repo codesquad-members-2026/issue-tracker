@@ -8,7 +8,7 @@ import org.springframework.data.relational.core.mapping.Table;
 
 import java.time.LocalDate;
 
-@Table(name = "MILESTONES")
+@Table(name = "milestones")
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,15 +18,13 @@ public class Milestone {
     private String name;
     private LocalDate dueDate;
     private String description;
-    private Integer openIssueCount;
-    private Integer closedIssueCount;
     private MilestoneStatus status;
     private Boolean isDeleted;
 
     public void update(String name, LocalDate dueDate, String description){
         this.name = name;
-        if(dueDate != null) this.dueDate = dueDate;
-        if((description != null) && !(description.isEmpty())) this.description = description;
+        this.dueDate = dueDate;
+        this.description = description;
     }
 
     public void changeStatus(MilestoneStatus status){

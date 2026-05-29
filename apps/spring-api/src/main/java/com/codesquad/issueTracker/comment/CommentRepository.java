@@ -11,9 +11,10 @@ import java.util.List;
 @Repository
 public interface CommentRepository extends ListCrudRepository<Comment,Long> {
 
-    List<Comment> findAllByIssueNumberOrderByCreatedAtAsc(Long issueNumber);
+    @Query("SELECT * FROM comments WHERE issue_id = :issueId ORDER BY created_at ASC")
+    List<Comment> findAllByIssueIdOrderByCreatedAtAsc(@Param("issueId") Long issueId);
 
     @Modifying
-    @Query("DELETE FROM COMMENTS WHERE id = :id")
-    int deleteCommentById(@Param("id") Long id);
+    @Query("DELETE FROM comments WHERE id = :id AND user_id = :userId")
+    int deleteCommentByIds(@Param("id") Long id, @Param("userId") Long userId);
 }
